@@ -114,7 +114,8 @@ Tile.prototype.change = function(mx, my, c, s) {
   let s3 = ((mx-this.a.x)*(this.c.y-this.a.y) - (this.c.x-this.a.x)*(my-this.a.y)) > 0;
   if ((s1 && s2 && s3) || (!s1 && !s2 && !s3)) {
     this.number += c;
-    this.number %= 27;
+    this.number %= s.length;
+    if (this.number < 0) this.number = s.length - 1;
     this.letter = this.possible[this.number];
     for (let i = 0; i < 12; i++) {
       this.segments[i] = s[this.number][i];
