@@ -5,7 +5,7 @@ function setup() {
   createCanvas(1280, 720);
 
   puzzle = new Puzzle();
-  // puzzle.shuffle();
+  puzzle.shuffle();
   input = -1;
   createP("Move one ball from the top of one stack to the top of another by clicking on one and then clicking on the other.");
   createP("In the solved state, the colors from bottom to top should be RED, YELLOW, GREEN, BLUE, PURPLE.");
