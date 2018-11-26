@@ -41,7 +41,7 @@ function cross2D(r1, r2) {
 }
 
 function calculateLight(segs, mx, my) {
-  if (mx < 0 || mx > width || my < 0 || my > height) {
+  if (mx < 0 || mx > width || my < 0 || my > height || (mx == 0 && my == 0)) {
     return [];
   }
   let rays = [];
