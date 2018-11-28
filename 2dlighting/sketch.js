@@ -32,10 +32,6 @@ function setup() {
   segments.push(new Segment(550, 50, 600, 50));
 }
 
-function ccw(p1, p2, p3) {
-  return (p2.x - p1.x)*(p3.y - p1.y) - (p2.y - p1.y)*(p3.x - p1.x);
-}
-
 function cross2D(r1, r2) {
   return r1.x*r2.y - r1.y*r2.x;
 }
@@ -64,8 +60,7 @@ function calculateLight(segs, mx, my) {
     rays.push(d2);
     rays.push(d3);
   }
-  let zeroV = createVector(0, 0);
-  rays.sort(function (a, b) {return ccw(zeroV, a, b);});
+  rays.sort(function (a, b) {return a.heading() - b.heading();});
 
   let points = [];
   for (let i = 0; i < rays.length; i++) {
