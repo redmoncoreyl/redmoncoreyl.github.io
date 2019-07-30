@@ -19,8 +19,8 @@ class ButtonGroup {
     for (let i = 0; i < nLines; i++) {
       // determins number of buttons in this line
       let cn = Math.ceil(nPerLine*(i+1)) - n;
-      let hsp = (w - bw*cn)/(cn+1);
-      let ix = hsp+x;
+      let hsp = (w - bw*cn)/(cn-1);
+      let ix = x;
       for (let j = 0; j < cn; j++) {
         this.buttons.push(new Button(ix, iy, bw, bh, br, bts[k], ts, tc, f, false, nc, ac, function() { return true; }))
         ix += bw + hsp;

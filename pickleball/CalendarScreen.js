@@ -1,8 +1,9 @@
 class CalendarScreen {
-  constructor(ti, fd, ds, ev, fnts) {
+  constructor(ti, fd, ds, nts, ev, fnts) {
     this.title = ti;
     this.firstDay = fd;
     this.daysInMonth = ds;
+    this.showNotes = nts;
     this.events = ev;
     this.fonts = fnts;
     this.daysArr = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
@@ -11,10 +12,12 @@ class CalendarScreen {
   }
 
   handleTyped(k, kc) {
+    if (!this.showNotes) return;
     this.notesBox.handleTyped(k, kc);
   }
 
   handleClick(mx, my) {
+    if (!this.showNotes) return;
     this.notesBox.handleClick(mx, my);
     return {created: false};
   }
@@ -33,16 +36,29 @@ class CalendarScreen {
     // calendar
     fill(nc);
     noStroke();
-    rect(30, 130, 1180, 50);
+    if (this.showNotes) {
+      rect(30, 130, 1180, 50);
+    } else {
+      rect(30, 130, 1540, 50);
+    }
     fill(255);
     textFont(this.fonts[1]);
     textSize(25);
-    for (let i = 0; i < this.daysArr.length; i++) {
-      text(this.daysArr[i], 170*i+30, 130-3, 160, 50)
+    if (this.showNotes) {
+      for (let i = 0; i < this.daysArr.length; i++) {
+        text(this.daysArr[i], 170*i+30, 130-3, 160, 50)
+      }
+    } else {
+      for (let i = 0; i < this.daysArr.length; i++) {
+        text(this.daysArr[i], 221.4*i+30, 130-3, 211.4, 50)
+      }
     }
     let nRows = Math.ceil((this.firstDay+this.daysInMonth)/7);
     let bh = (870-190-(nRows-1)*10)/nRows;
     let bw = 160;
+    if (!this.showNotes) {
+      bw = 211.4;
+    }
     let x = 30, y = 190;
     fill(255, 255, 255, 180);
     let k = -this.firstDay+1;
@@ -65,15 +81,20 @@ class CalendarScreen {
           let ty = y-3;
           for (let i = 0; i < cEvents.length; i++) {
             textFont(this.fonts[2]);
-            if (ty == y-3) {
-              let numWidth = textWidth(String(k));
-              text(cEvents[i].title, x+numWidth+9, ty);
-            } else {
-              text(cEvents[i].title, x+8, ty);
+            let numWidth = textWidth(String(k));
+            if (!this.showNotes) {
+              x += 15;
             }
+            text(cEvents[i].title, x+numWidth+9, ty+2);
+            if (!this.showNotes) {
+              x -= 15;
+              }
             ty += dayTS+5;
             textFont(this.fonts[3]);
-            text(cEvents[i].time, x+5, ty);
+            push();
+            textAlign(CENTER, CENTER);
+            text(cEvents[i].time, x, ty+2, bw, dayTS+3);
+            pop();
             ty += dayTS+5;
           }
           pop();
@@ -85,6 +106,7 @@ class CalendarScreen {
     }
 
     // textBox
+    if (!this.showNotes) return;
     fill(nc);
     noStroke();
     rect(1240, 130, 330, 50);

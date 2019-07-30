@@ -87,7 +87,7 @@ class TextBox {
     }
     textSize(this.textSize);
     textFont(this.font);
-    text(this.text, this.x+this.padding, this.y-3+(!this.isCentered?this.padding:0), this.w-this.padding*2, this.h);
+    text(this.text, this.x+this.padding, this.y-3+(!this.isCentered?this.padding:0), this.w-this.padding*2+(!this.isCentered ? 20 : 0), this.h);
     if(Math.floor(millis()/500)%2 == 0 && this.active) {
       if (this.isCentered) {
         let tw = textWidth(this.text);

@@ -1,8 +1,9 @@
 class EventsScreen {
-  constructor(ti, fd, ds, ev, pg, fnts) {
+  constructor(ti, fd, ds, nts, ev, pg, fnts) {
     this.calendarTitle = ti;
     this.firstDay = fd;
     this.daysInMonth = ds;
+    this.notes = nts;
     this.fonts = fnts;
     this.displayPage = pg;
     this.events = ev;
@@ -57,7 +58,7 @@ class EventsScreen {
       return {created: true, replace: false, screen: new CreateEventScreen(this.firstDay, this.daysInMonth, this.fonts)};
     }
     if (this.doneBtn.handleClick(mx, my)) {
-      return {created: true, replace: true, screen: new CalendarScreen(this.calendarTitle, this.firstDay, this.daysInMonth, this.events, this.fonts)};
+      return {created: true, replace: true, screen: new CalendarScreen(this.calendarTitle, this.firstDay, this.daysInMonth, this.notes, this.events, this.fonts)};
     }
     return {created: false};
   }
