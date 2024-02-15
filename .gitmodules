@@ -1,0 +1,3 @@
+[submodule "pandemic"]
+	path = pandemic
+	url = https://github.com/redmoncoreyl/pandemic.git
