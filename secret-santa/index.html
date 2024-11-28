@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secret Santa</title>
+    <script>
+        // Clear sessionStorage when the page loads
+        window.onload = () => sessionStorage.clear();
+
+        function handleSubmit(event) {
+            event.preventDefault(); // Prevent default form submission behavior
+
+            // Get the form data
+            const names = document.getElementById('names').value;
+            const disallowedPairings = document.getElementById('disallowedPairings').value;
+            const allowSelfGiving = document.getElementById('allowSelfGiving').checked;
+
+            // Store the data in sessionStorage
+            sessionStorage.setItem('names', names);
+            sessionStorage.setItem('disallowedPairings', disallowedPairings);
+            sessionStorage.setItem('allowSelfGiving', allowSelfGiving);
+
+            // Redirect to the display page
+            window.location.href = 'pairings.html';
+        }
+    </script>
+</head>
+<body>
+    <h1>Secret Santa</h1>
+    <form id="dataForm" onsubmit="handleSubmit(event)">
+        <label for="names">Names:</label><br>
+        <textarea id="names" name="names" rows="8" cols="50" required></textarea>
+		<p>Enter each name on its own line above.</p><br>
+        
+        <label for="disallowedPairings">Disallowed pairings:</label><br>
+        <textarea id="disallowedPairings" name="disallowedPairings" rows="10" cols="50" required></textarea>
+		<p>Enter each disallowed pairing on its own line above in Name1-Name2 format to prevent Name1 from getting a gift for Name2.</p>
+        
+        <label for="allowSelfGiving">
+            <input type="checkbox" id="allowSelfGiving" name="allowSelfGiving">
+            Allow self-giving
+        </label><br><br>
+        
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>
