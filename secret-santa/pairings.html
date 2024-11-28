@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pairings</title>
+    <script>
+        window.onload = () => {
+            // Retrieve data from sessionStorage
+            const names = sessionStorage.getItem('names');
+            const disallowedPairings = sessionStorage.getItem('disallowedPairings');
+            const allowSelfGiving = sessionStorage.getItem('allowSelfGiving');
+
+            // If no data is found (e.g., after refresh), redirect to the form page
+            if (names === null || disallowedPairings === null || allowSelfGiving === null) {
+                alert('Secret santa data not available. Please return to the form and resubmit.');
+                sessionStorage.clear();
+                window.location.href = 'index.html'; // Redirect back to the form page
+                return;
+            }
+
+			preprocessData();
+			makeValidPairings();
+			initializeState();
+        };
+
+		function preprocessData() {
+			// split names into an array and remove excess whitespace
+			const namesInput = sessionStorage.getItem('names');
+			let names = namesInput.split('\n');
+			names = names.filter((name) => name.length > 0);
+			names = names.map((name) => name.trim().replaceAll(/ +/g," "));
+
+			// initialize disallowed pairings
+			let disallowedPairings = {};
+			for (let name of names) {
+				disallowedPairings[name] = {};
+			}
+
+			// add each disallowed pairing
+			const disallowedPairingsInput = sessionStorage.getItem('disallowedPairings');
+			let disallowedPairingsArray = disallowedPairingsInput.split('\n');
+			disallowedPairingsArray = disallowedPairingsArray.filter((pairing) => pairing.length > 0);
+			for (let pairing of disallowedPairingsArray) {
+				let pairingArray = pairing.split('-');
+				let giver = pairingArray[0].trim().replaceAll(/ +/g," ");
+				let recipient = pairingArray[1].trim().replaceAll(/ +/g," ");
+
+				disallowedPairings[giver][recipient] = null;
+			}
+
+			// store objects
+			sessionStorage.setItem("names", JSON.stringify(names));
+			sessionStorage.setItem("disallowedPairings", JSON.stringify(disallowedPairings));
+		}
+
+		function makeValidPairings() {
+			// get inputs
+			let names = JSON.parse(sessionStorage.getItem('names'));
+			let disallowedPairings = JSON.parse(sessionStorage.getItem('disallowedPairings'));
+			let allowSelfGiving = sessionStorage.getItem('allowSelfGiving') === 'true';
+
+			let givers = shuffle(names);
+			let recipients = allowSelfGiving ? shuffle(givers) : randomlyRotate(givers);
+
+			while (!isPairingLegal(givers, recipients, disallowedPairings)) {
+				givers = shuffle(names);
+				recipients = allowSelfGiving ? shuffle(givers) : randomlyRotate(givers);
+			}
+
+			let pairing = [];
+			for (let i = 0; i < givers.length; i++) {
+				pairing.push({giver: givers[i], recipient: recipients[i]});
+			}
+			pairing = shuffle(pairing);
+
+			// store pairing
+			sessionStorage.setItem('pairing', JSON.stringify(pairing));
+		}
+
+		function isPairingLegal(namesPresentationOrder, namesPairingOrder, disallowedPairings) {
+			for (let i = 0; i < namesPresentationOrder.length; i++) {
+				let giver = namesPresentationOrder[i];
+				let recipient = namesPairingOrder[i];
+
+				if (recipient in disallowedPairings[giver]) return false;
+			}
+			return true;
+		}
+
+		function initializeState() {
+			let pairing = JSON.parse(sessionStorage.getItem('pairing'));
+			let showingRecipient = false;
+			let pairingIndex = 0;
+
+            // Display the data
+            document.getElementById('giver').textContent = pairing[0].giver;
+
+			// Store the state
+			sessionStorage.setItem('showingRecipient', JSON.stringify(showingRecipient));
+			sessionStorage.setItem('pairingIndex', JSON.stringify(pairingIndex));
+		}
+
+		function processNext() {
+			let pairing = JSON.parse(sessionStorage.getItem('pairing'));
+			let showingRecipient = JSON.parse(sessionStorage.getItem('showingRecipient'));
+			let pairingIndex = JSON.parse(sessionStorage.getItem('pairingIndex'));
+
+			showingRecipient = !showingRecipient;
+
+			if (showingRecipient) {
+				document.getElementById('recipient').textContent = pairing[pairingIndex].recipient;
+			} else {
+				pairingIndex++;
+				if (pairingIndex == pairing.length) pairingIndex = 0;
+				document.getElementById('giver').textContent = pairing[pairingIndex].giver;
+				document.getElementById('recipient').textContent = ' ';
+			}
+
+			// Store the state
+			sessionStorage.setItem('showingRecipient', JSON.stringify(showingRecipient));
+			sessionStorage.setItem('pairingIndex', JSON.stringify(pairingIndex));
+		}
+
+		function shuffle(array) {
+			array = [...array];
+			let currentIndex = array.length;
+
+			// While there remain elements to shuffle...
+			while (currentIndex != 0) {
+
+				// Pick a remaining element...
+				let randomIndex = Math.floor(Math.random() * currentIndex);
+				currentIndex--;
+
+				// And swap it with the current element.
+				[array[currentIndex], array[randomIndex]] = [
+				array[randomIndex], array[currentIndex]];
+			}
+
+			return array;
+		}
+
+		function randomlyRotate(array) {
+			array = [...array];
+			const rotationAmount = Math.floor(Math.random() * (array.length - 1)) + 1;
+			const rotatedArray = array.slice(rotationAmount).concat(array.slice(0, rotationAmount));
+			return rotatedArray;
+		}
+    </script>
+	<style>
+		h2 {
+			min-height: 50px; /* Adjust based on the largest expected content */
+		}
+	</style>
+</head>
+<body>
+    <h1>Secret Santa Pairing</h1>
+	<h2 id="giver"> </h2>
+	<p>gets a gift for</p>
+	<h2 id="recipient"> </h2>
+	<input id="next" type="button" value="Next" onclick="processNext();" />
+</body>
+</html>
