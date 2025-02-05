@@ -77,10 +77,10 @@
 			sessionStorage.setItem('pairing', JSON.stringify(pairing));
 		}
 
-		function isPairingLegal(givers, recipiets, disallowedPairings, allowSelfGiving) {
-			for (let i = 0; i < namesPresentationOrder.length; i++) {
-				let giver = namesPresentationOrder[i];
-				let recipient = namesPairingOrder[i];
+		function isPairingLegal(givers, recipients, disallowedPairings, allowSelfGiving) {
+			for (let i = 0; i < givers.length; i++) {
+				let giver = givers[i];
+				let recipient = recipients[i];
 
 				if (!allowSelfGiving && giver === recipient) return false;
 				if (recipient in disallowedPairings[giver]) return false;
