@@ -24,6 +24,10 @@
 			initializeState();
         };
 
+		window.onbeforeunload = () => {
+			sessionStorage.clear();
+		}
+
 		function preprocessData() {
 			// split names into an array and remove excess whitespace
 			const namesInput = sessionStorage.getItem('names');
