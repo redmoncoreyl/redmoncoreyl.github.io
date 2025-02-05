@@ -61,28 +61,28 @@
 			let allowSelfGiving = sessionStorage.getItem('allowSelfGiving') === 'true';
 
 			let givers = shuffle(names);
-			let recipients = allowSelfGiving ? shuffle(givers) : randomlyRotate(givers);
+			let recipients = shuffle(givers);
 
-			while (!isPairingLegal(givers, recipients, disallowedPairings)) {
+			while (!isPairingLegal(givers, recipients, disallowedPairings, allowSelfGiving)) {
 				givers = shuffle(names);
-				recipients = allowSelfGiving ? shuffle(givers) : randomlyRotate(givers);
+				recipients = shuffle(givers);
 			}
 
 			let pairing = [];
 			for (let i = 0; i < givers.length; i++) {
 				pairing.push({giver: givers[i], recipient: recipients[i]});
 			}
-			pairing = shuffle(pairing);
 
 			// store pairing
 			sessionStorage.setItem('pairing', JSON.stringify(pairing));
 		}
 
-		function isPairingLegal(namesPresentationOrder, namesPairingOrder, disallowedPairings) {
+		function isPairingLegal(givers, recipiets, disallowedPairings, allowSelfGiving) {
 			for (let i = 0; i < namesPresentationOrder.length; i++) {
 				let giver = namesPresentationOrder[i];
 				let recipient = namesPairingOrder[i];
 
+				if (!allowSelfGiving && giver === recipient) return false;
 				if (recipient in disallowedPairings[giver]) return false;
 			}
 			return true;
@@ -139,13 +139,6 @@
 			}
 
 			return array;
-		}
-
-		function randomlyRotate(array) {
-			array = [...array];
-			const rotationAmount = Math.floor(Math.random() * (array.length - 1)) + 1;
-			const rotatedArray = array.slice(rotationAmount).concat(array.slice(0, rotationAmount));
-			return rotatedArray;
 		}
     </script>
 	<style>
