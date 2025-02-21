@@ -1,5 +1,5 @@
 window.onresize = () => {
-	resizeCanvas(window.innerWidth-1, window.innerHeight-1);
+	resizeCanvas(window.innerWidth, window.innerHeight);
 }
 
 document.addEventListener('contextmenu', event => event.preventDefault());
