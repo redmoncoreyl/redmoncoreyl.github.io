@@ -9,6 +9,7 @@ let game;
 let drawRedRect = false;
 let circleX = 0;
 let circleY = 0;
+let ignoreMouseDown = false;
 
 function preload() {
 	let suitImages = {};
@@ -21,7 +22,9 @@ function preload() {
 }
 
 function mousePressed(event) {
-	if (event.type === 'touchstart') return;
+	if (event.type === 'touchstart') ignoreMouseDown = true;
+	if (ignoreMouseDown && event.type === 'mousedown') return;
+
 	drawRedRect = !drawRedRect;
 	circleX = mouseX;
 	circleY = mouseY;
