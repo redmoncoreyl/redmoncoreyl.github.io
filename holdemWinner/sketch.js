@@ -20,7 +20,8 @@ function preload() {
 	CARD_FONT = loadFont('assets/card_font.ttf');
 }
 
-function touchStarted() {
+function mousePressed(event) {
+	if (event.type === 'touchstart') return;
 	drawRedRect = !drawRedRect;
 	circleX = mouseX;
 	circleY = mouseY;
