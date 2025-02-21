@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="84.754105mm"
+   height="98.342712mm"
+   viewBox="0 0 84.754105 98.342712"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4 (86a8ad7, 2024-10-11)"
+   sodipodi:docname="clubs.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="0.99508277"
+     inkscape:cx="169.33265"
+     inkscape:cy="287.91575"
+     inkscape:window-width="2560"
+     inkscape:window-height="1334"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-60.060416,-72.231249)">
+    <path
+       sodipodi:nodetypes="czcccczczc"
+       id="rect3667"
+       d="m 94.143011,114.66857 c -15.56117,-7.43335 -38.451147,1.43319 -33.035408,21.43445 5.277674,19.49137 28.069774,15.21394 35.95127,3.34919 -3.288052,22.49627 -9.062601,25.99858 -12.523753,30.88218 h 36.74639 c -3.72315,-5.22262 -10.48377,-8.38591 -14.44847,-31.19048 7.94183,11.84477 31.81694,15.95096 37.01835,-3.25879 5.11669,-18.8968 -17.94763,-29.6583 -33.28485,-21.10385 14.70694,-9.87572 19.98855,-42.310449 -7.86634,-42.310449 -28.129857,0 -23.436483,33.068879 -8.557189,42.197749 z"
+       style="color:#000000;display:block;overflow:visible;visibility:visible;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:0.479145;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none" />
+  </g>
+</svg>
