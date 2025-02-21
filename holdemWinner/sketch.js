@@ -5,7 +5,7 @@ window.onresize = () => {
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 let CARD_FONT;
-let hand;
+let game;
 
 function preload() {
 	let suitImages = {};
@@ -18,15 +18,14 @@ function preload() {
 }
 
 function mousePressed() {
-	hand.handleMouseClick(mouseX, mouseY, mouseButton, width, height);
 }
 
 function setup() {
 	createCanvas(window.innerWidth, window.innerHeight);
-	hand = new HoldemHand(4);
+	game = new GameHandler();
 }
 
 function draw() {
 	background(3, 115, 55);
-	hand.draw(width, height);
+	game.draw();
 }
