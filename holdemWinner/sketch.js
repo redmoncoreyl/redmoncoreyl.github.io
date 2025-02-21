@@ -6,9 +6,6 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 
 let CARD_FONT;
 let game;
-let drawRedRect = false;
-let circleX = 0;
-let circleY = 0;
 let ignoreMouseDown = false;
 
 function preload() {
@@ -24,10 +21,6 @@ function preload() {
 function mousePressed(event) {
 	if (event.type === 'touchstart') ignoreMouseDown = true;
 	if (ignoreMouseDown && event.type === 'mousedown') return;
-
-	drawRedRect = !drawRedRect;
-	circleX = mouseX;
-	circleY = mouseY;
 }
 
 function setup() {
@@ -38,10 +31,4 @@ function setup() {
 function draw() {
 	background(3, 115, 55);
 	game.draw();
-	if (drawRedRect) {
-		noStroke();
-		fill(255, 0, 0, 120);
-		rect(0, 0, width, height);
-		ellipse(circleX, circleY, width/8);
-	}
 }
