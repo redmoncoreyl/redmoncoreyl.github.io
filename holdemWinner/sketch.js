@@ -6,6 +6,9 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 
 let CARD_FONT;
 let game;
+let drawRedRect = false;
+let circleX = 0;
+let circleY = 0;
 
 function preload() {
 	let suitImages = {};
@@ -17,7 +20,10 @@ function preload() {
 	CARD_FONT = loadFont('assets/card_font.ttf');
 }
 
-function mousePressed() {
+function touchStarted() {
+	drawRedRect = !drawRedRect;
+	circleX = mouseX;
+	circleY = mouseY;
 }
 
 function setup() {
@@ -28,4 +34,10 @@ function setup() {
 function draw() {
 	background(3, 115, 55);
 	game.draw();
+	if (drawRedRect) {
+		noStroke();
+		fill(255, 0, 0, 120);
+		rect(0, 0, width, height);
+		ellipse(circleX, circleY, width/8);
+	}
 }
