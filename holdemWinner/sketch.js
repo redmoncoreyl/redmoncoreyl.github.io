@@ -30,5 +30,5 @@ function setup() {
 
 function draw() {
 	background(3, 115, 55);
-	game.draw();
+	game.draw(width, height);
 }

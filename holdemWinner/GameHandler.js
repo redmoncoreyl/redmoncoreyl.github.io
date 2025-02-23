@@ -5,6 +5,7 @@ const GameState = Object.freeze({
 	FREE_PLAY: Symbol('free-play'),
 	HELP: Symbol('help')
 });
+const WIDE_SCREEN_HEIGHT_MULTIPLE = 1.4;
 
 class GameHandler {
 
@@ -26,7 +27,26 @@ class GameHandler {
 		this.gameState = GameState.MENU;
 	}
 
-	draw() {
+	draw(screenWidth, screenHeight) {
+		if (this.gameState === GameState.MENU) {
+			this.drawTitle(screenWidth, screenHeight);
+		}
+	}
 
+	drawTitle(screenWidth, screenHeight) {
+		let isWideScreen = screenWidth > screenHeight * WIDE_SCREEN_HEIGHT_MULTIPLE;
+		let activeWidth = isWideScreen ? screenHeight / WIDE_SCREEN_HEIGHT_MULTIPLE : screenWidth;
+		let activeHeight = isWideScreen ? screenHeight : screenHeight * WIDE_SCREEN_HEIGHT_MULTIPLE;
+
+		push();
+		textAlign(CENTER, TOP);
+		noStroke();
+		textSize(screenWidth/18);
+		textFont(CARD_FONT);
+		fill(40);
+		text('TEXAS HOLD\'EM WINNERS', screenWidth/2+screenWidth/220, screenHeight/9+screenWidth/220);
+		fill(254, 252, 247);
+		text('TEXAS HOLD\'EM WINNERS', screenWidth/2, screenHeight/9);
+		pop();
 	}
 }
