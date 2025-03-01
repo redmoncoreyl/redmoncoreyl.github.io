@@ -7,6 +7,10 @@ class GameHandler {
 		HELP: Symbol('help')
 	});
 
+	static get GameState() {
+		return GameHandler.#GameState;
+	}
+
 	constructor(screenWidth, screenHeight) {
 		// types of games:
 		// arcade - each round, you have less and less time to get it
@@ -34,5 +38,11 @@ class GameHandler {
 
 	resize(screenWidth, screenHeight) {
 		this.menu.resize(screenWidth, screenHeight);
+	}
+
+	handleMouseClick(mouseX, mouseY) {
+		if (this.gameState === GameHandler.#GameState.MENU) {
+			console.log(this.menu.handleMouseClick(mouseX, mouseY));
+		}
 	}
 }

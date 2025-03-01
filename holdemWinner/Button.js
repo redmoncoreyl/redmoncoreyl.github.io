@@ -33,8 +33,8 @@ class Button {
 		p5Instance.pop();
 	}
 
-	isClick(mouseX, mouseY) {
-		return isHover(mouseX, mouseY);
+	isClicked(mouseX, mouseY) {
+		return this.isHover(mouseX, mouseY);
 	}
 
 	isHover(mouseX, mouseY) {

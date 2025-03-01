@@ -15,9 +15,13 @@ class MainMenu {
 		this.buttonColor = (new p5(() => {})).color(178, 219, 181);
 		this.buttonHoverColor = (new p5(() => {})).color(132, 173, 136);
 		this.buttonsText = ['Time Trial', 'Arcade', 'Free Play', 'Help'];
+		let gameModes = [GameHandler.GameState.TIME_TRIAL, GameHandler.GameState.ARCADE, GameHandler.GameState.FREE_PLAY, GameHandler.GameState.HELP];
 		this.buttons = [];
-		for (let buttonText of this.buttonsText) {
-			this.buttons.push(new Button(buttonText, 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, null));
+		for (let i = 0; i < this.buttonsText.length; i++) {
+			this.buttons.push({
+				buttonObj: new Button(this.buttonsText[i], 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, null),
+				gameMode: gameModes[i]
+			});
 		}
 		this.resize(screenWidth, screenHeight);
 	}
@@ -42,7 +46,7 @@ class MainMenu {
 		let cornerRadius = 0.2*buttonHeight;
 		let buttonStrokeWeight = 0.03 * buttonHeight;
 		for (let button of this.buttons) {
-			button.resize(buttonLeftX, buttonCenterY, buttonWidth, buttonHeight, cornerRadius, buttonStrokeWeight);
+			button.buttonObj.resize(buttonLeftX, buttonCenterY, buttonWidth, buttonHeight, cornerRadius, buttonStrokeWeight);
 			buttonCenterY += buttonHeight*1.5;
 		}
 	}
@@ -63,7 +67,15 @@ class MainMenu {
 
 		// draw buttons
 		for (let button of this.buttons) {
-			button.draw(p5Instance);
+			button.buttonObj.draw(p5Instance);
+		}
+	}
+
+	handleMouseClick(mouseX, mouseY) {
+		for (let button of this.buttons) {
+			if (button.buttonObj.isClicked(mouseX, mouseY)) {
+				return button.gameMode;
+			}
 		}
 	}
 }

@@ -22,6 +22,8 @@ function preload() {
 function mousePressed(event) {
 	if (event.type === 'touchstart') ignoreMouseDown = true;
 	if (ignoreMouseDown && event.type === 'mousedown') return;
+
+	game.handleMouseClick(mouseX, mouseY);
 }
 
 function setup() {
