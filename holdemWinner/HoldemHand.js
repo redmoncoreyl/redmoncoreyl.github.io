@@ -1,13 +1,35 @@
-const NUM_COMMUNITY_CARDS = 5;
-const WIDE_SCREEN_HEIGHT_MULTIPLE = 1.4;
-const FANNED_CARD_WIDTH_MULTIPLE = 0.28;
-const NARROW_SPACING_CARD_WIDTH_MULTIPLE = 0.1;
-const WIDE_SPACING_CARD_WIDTH_MULTIPLE = 0.15;
-const NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE = 0.3;
-
 class HoldemHand {
+	static #CONSTANTS = Object.freeze({
+		NUM_COMMUNITY_CARDS: 5,
+		WIDE_SCREEN_HEIGHT_MULTIPLE: 1.4,
+		FANNED_CARD_WIDTH_MULTIPLE: 0.28,
+		NARROW_SPACING_CARD_WIDTH_MULTIPLE: 0.1,
+		WIDE_SPACING_CARD_WIDTH_MULTIPLE: 0.15,
+		NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE: 0.3
+	});
+
 	static get NUM_COMMUNITY_CARDS() {
-		return NUM_COMMUNITY_CARDS;
+		return this.#CONSTANTS.NUM_COMMUNITY_CARDS;
+	}
+
+	static get WIDE_SCREEN_HEIGHT_MULTIPLE() {
+		return this.#CONSTANTS.WIDE_SCREEN_HEIGHT_MULTIPLE;
+	}
+
+	static get FANNED_CARD_WIDTH_MULTIPLE() {
+		return this.#CONSTANTS.FANNED_CARD_WIDTH_MULTIPLE;
+	}
+
+	static get NARROW_SPACING_CARD_WIDTH_MULTIPLE() {
+		return this.#CONSTANTS.NARROW_SPACING_CARD_WIDTH_MULTIPLE;
+	}
+
+	static get WIDE_SPACING_CARD_WIDTH_MULTIPLE() {
+		return this.#CONSTANTS.WIDE_SPACING_CARD_WIDTH_MULTIPLE;
+	}
+
+	static get NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE() {
+		return this.#CONSTANTS.NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE;
 	}
 
 	static #determineWinners(communityCards, holeCards) {
@@ -264,7 +286,7 @@ class HoldemHand {
 			);
 			this.selectedPlayers = this.selectedPlayers.map((isSelected, i) => (isSelected != isHoleCardClicked[i]));
 		}
-		
+
 		if (mouseButton == RIGHT) {
 			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
 			console.log(isCorrect);
