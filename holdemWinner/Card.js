@@ -16,55 +16,55 @@ class Card {
 		return height * 2.25 / 3.5;
 	}
 
-	draw(x = 0, y = 0, width = 100, alignX = LEFT, alignY = TOP, rotation = 0) {
+	draw(p5Instance, x = 0, y = 0, width = 100, alignX = LEFT, alignY = TOP, rotation = 0) {
 		let height = width * 3.5 / 2.25;
 		let cardCornerRadius = width * 0.05;
 		let shaddowOffset = cardCornerRadius;
-		let strokeWt = 2 * width / 300;
+		let strokeWeight = 2 * width / 300;
 
 		// alignment
 		let align = function() {
-			if (alignX === RIGHT) translate(-width, 0);
-			if (alignX === CENTER) translate(-width/2, 0);
-			if (alignY === BOTTOM) translate(0, -height);
-			if (alignY === CENTER) translate(0, -height/2);
+			if (alignX === p5Instance.RIGHT) p5Instance.translate(-width, 0);
+			if (alignX === p5Instance.CENTER) p5Instance.translate(-width/2, 0);
+			if (alignY === p5Instance.BOTTOM) p5Instance.translate(0, -height);
+			if (alignY === p5Instance.CENTER) p5Instance.translate(0, -height/2);
 		}
 		
 		// draw card shaddow
-		push();
-		fill(0, 0, 0, 50);
-		noStroke();
-		translate(x + shaddowOffset, y + shaddowOffset);
-		rotate(rotation);
+		p5Instance.push();
+		p5Instance.fill(0, 0, 0, 50);
+		p5Instance.noStroke();
+		p5Instance.translate(x + shaddowOffset, y + shaddowOffset);
+		p5Instance.rotate(rotation);
 		align();
-		rect(0, 0, width, height, cardCornerRadius);
-		pop();
+		p5Instance.rect(0, 0, width, height, cardCornerRadius);
+		p5Instance.pop();
 
 		// draw card
-		push();
-		fill(254, 252, 247);
-		strokeWeight(strokeWt);
-		stroke(50);
-		translate(x, y);
-		rotate(rotation);
+		p5Instance.push();
+		p5Instance.fill(254, 252, 247);
+		p5Instance.strokeWeight(strokeWeight);
+		p5Instance.stroke(50);
+		p5Instance.translate(x, y);
+		p5Instance.rotate(rotation);
 		align();
-		rect(0, 0, width, height, cardCornerRadius);
+		p5Instance.rect(0, 0, width, height, cardCornerRadius);
 
 		// draw rank
 		let textHeight = height*.21;
 		let textCenterX = width*.14;
 		let textTopY = height*-.01;
-		textFont(CARD_FONT);
-		textSize(textHeight);
-		fill(0, 0, 0);
-		textAlign(CENTER, TOP);
-		text(this.rank.fontCharacter, textCenterX, textTopY);
-		push();
-		translate(width/2, height/2);
-		rotate(PI);
-		translate(-width/2, -height/2);
-		text(this.rank.fontCharacter, textCenterX, textTopY);
-		pop();
+		p5Instance.textFont(CARD_FONT);
+		p5Instance.textSize(textHeight);
+		p5Instance.fill(0, 0, 0);
+		p5Instance.textAlign(p5Instance.CENTER, p5Instance.TOP);
+		p5Instance.text(this.rank.fontCharacter, textCenterX, textTopY);
+		p5Instance.push();
+		p5Instance.translate(width/2, height/2);
+		p5Instance.rotate(p5Instance.PI);
+		p5Instance.translate(-width/2, -height/2);
+		p5Instance.text(this.rank.fontCharacter, textCenterX, textTopY);
+		p5Instance.pop();
 
 
 		// draw suit
@@ -74,14 +74,14 @@ class Card {
 		let suitAdjustX = width*.14;
 		let suitAdjustY = textHeight+suitAdjustX*1.2;
 
-		imageMode(CENTER);
-		image(suitImage, suitAdjustX, suitAdjustY, suitWidth, suitHeight);
-		push();
-		translate(width/2, height/2);
-		rotate(PI);
-		translate(-width/2, -height/2);
-		image(suitImage, suitAdjustX, suitAdjustY, suitWidth, suitHeight);
-		pop();
-		pop();
+		p5Instance.imageMode(p5Instance.CENTER);
+		p5Instance.image(suitImage, suitAdjustX, suitAdjustY, suitWidth, suitHeight);
+		p5Instance.push();
+		p5Instance.translate(width/2, height/2);
+		p5Instance.rotate(PI);
+		p5Instance.translate(-width/2, -height/2);
+		p5Instance.image(suitImage, suitAdjustX, suitAdjustY, suitWidth, suitHeight);
+		p5Instance.pop();
+		p5Instance.pop();
 	}
 }
