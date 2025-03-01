@@ -13,7 +13,7 @@ class MainMenu {
 
 		// buttons
 		this.buttonColor = (new p5(() => {})).color(178, 219, 181);
-		this.buttonHoverColor = (new p5(() => {})).color(132, 173, 136);
+		this.buttonHoverColor = (new p5(() => {})).color(127, 163, 138);
 		this.buttonsText = ['Time Trial', 'Arcade', 'Free Play', 'Help'];
 		let gameModes = [GameHandler.GameState.TIME_TRIAL, GameHandler.GameState.ARCADE, GameHandler.GameState.FREE_PLAY, GameHandler.GameState.HELP];
 		this.buttons = [];
