@@ -1,5 +1,6 @@
 window.onresize = () => {
 	resizeCanvas(window.innerWidth, window.innerHeight);
+	game.resize(window.innerWidth, window.innerHeight);
 }
 
 document.addEventListener('contextmenu', event => event.preventDefault());
@@ -25,10 +26,10 @@ function mousePressed(event) {
 
 function setup() {
 	createCanvas(window.innerWidth, window.innerHeight);
-	game = new GameHandler();
+	game = new GameHandler(width, height);
 }
 
 function draw() {
 	background(3, 115, 55);
-	game.draw(width, height);
+	game.draw(this);
 }

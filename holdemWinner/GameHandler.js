@@ -1,15 +1,13 @@
-const GameState = Object.freeze({
-	MENU: Symbol('menu'),
-	ARCADE: Symbol('arcade'),
-	TIME_TRIAL: Symbol('time-trial'),
-	FREE_PLAY: Symbol('free-play'),
-	HELP: Symbol('help')
-});
-const WIDE_SCREEN_HEIGHT_MULTIPLE = 1.4;
-
 class GameHandler {
+	static #GameState = Object.freeze({
+		MENU: Symbol('menu'),
+		ARCADE: Symbol('arcade'),
+		TIME_TRIAL: Symbol('time-trial'),
+		FREE_PLAY: Symbol('free-play'),
+		HELP: Symbol('help')
+	});
 
-	constructor() {
+	constructor(screenWidth, screenHeight) {
 		// types of games:
 		// arcade - each round, you have less and less time to get it
 		//   right, goal is to get through as many rounds as possible
@@ -24,29 +22,17 @@ class GameHandler {
 		// help
 
 		// escape should pause game
-		this.gameState = GameState.MENU;
+		this.gameState = GameHandler.#GameState.MENU;
+		this.menu = new MainMenu(screenWidth, screenHeight);
 	}
 
-	draw(screenWidth, screenHeight) {
-		if (this.gameState === GameState.MENU) {
-			this.drawTitle(screenWidth, screenHeight);
+	draw(p5Instance) {
+		if (this.gameState === GameHandler.#GameState.MENU) {
+			this.menu.draw(p5Instance);
 		}
 	}
 
-	drawTitle(screenWidth, screenHeight) {
-		let isWideScreen = screenWidth > screenHeight * WIDE_SCREEN_HEIGHT_MULTIPLE;
-		let activeWidth = isWideScreen ? screenHeight / WIDE_SCREEN_HEIGHT_MULTIPLE : screenWidth;
-		let activeHeight = isWideScreen ? screenHeight : screenHeight * WIDE_SCREEN_HEIGHT_MULTIPLE;
-
-		push();
-		textAlign(CENTER, TOP);
-		noStroke();
-		textSize(screenWidth/18);
-		textFont(CARD_FONT);
-		fill(40);
-		text('TEXAS HOLD\'EM WINNERS', screenWidth/2+screenWidth/220, screenHeight/9+screenWidth/220);
-		fill(254, 252, 247);
-		text('TEXAS HOLD\'EM WINNERS', screenWidth/2, screenHeight/9);
-		pop();
+	resize(screenWidth, screenHeight) {
+		this.menu.resize(screenWidth, screenHeight);
 	}
 }

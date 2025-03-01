@@ -1,0 +1,69 @@
+class MainMenu {
+	static #CONSTANTS = Object.freeze({
+		WIDE_SCREEN_HEIGHT_MULTIPLE: 0.9
+	});
+
+	static get #WIDE_SCREEN_HEIGHT_MULTIPLE() {
+		return this.#CONSTANTS.WIDE_SCREEN_HEIGHT_MULTIPLE;
+	}
+
+	constructor(screenWidth, screenHeight) {
+		// title
+		this.titleText = 'TEXAS HOLD \'EM\nWINNERS';
+
+		// buttons
+		this.buttonColor = (new p5(() => {})).color(178, 219, 181);
+		this.buttonHoverColor = (new p5(() => {})).color(132, 173, 136);
+		this.buttonsText = ['Time Trial', 'Arcade', 'Free Play', 'Help'];
+		this.buttons = [];
+		for (let buttonText of this.buttonsText) {
+			this.buttons.push(new Button(buttonText, 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, null));
+		}
+		this.resize(screenWidth, screenHeight);
+	}
+
+	resize(screenWidth, screenHeight) {
+		this.isWideScreen = screenWidth > (screenHeight * MainMenu.#WIDE_SCREEN_HEIGHT_MULTIPLE);
+		this.menuWidth = this.isWideScreen ? screenHeight * MainMenu.#WIDE_SCREEN_HEIGHT_MULTIPLE : screenWidth;
+		this.menuHeight = this.isWideScreen ? screenHeight : screenWidth / MainMenu.#WIDE_SCREEN_HEIGHT_MULTIPLE;
+		this.menuTop = this.isWideScreen ? 0 : (screenHeight - this.menuHeight)/2;
+		this.menuBottom = screenHeight - this.menuTop;
+		this.menuLeft = this.isWideScreen ? (screenWidth - this.menuWidth)/2 : 0;
+		this.menuRight = screenWidth - this.menuLeft;
+
+		this.titleCenterX = (this.menuLeft + this.menuRight)/2;
+		this.titleCenterY = 0.049 * this.menuHeight + (screenHeight - this.menuHeight)/2;
+		this.titleSize = 0.09 * this.menuHeight;
+
+		let buttonLeftX = 0.075 * this.menuWidth + this.menuLeft;
+		let buttonCenterY = 0.34 * this.menuHeight + (screenHeight - this.menuHeight)/2;
+		let buttonWidth = 0.85 * this.menuWidth;
+		let buttonHeight = 0.1 * this.menuHeight;
+		let cornerRadius = 0.2*buttonHeight;
+		let buttonStrokeWeight = 0.03 * buttonHeight;
+		for (let button of this.buttons) {
+			button.resize(buttonLeftX, buttonCenterY, buttonWidth, buttonHeight, cornerRadius, buttonStrokeWeight);
+			buttonCenterY += buttonHeight*1.5;
+		}
+	}
+
+	draw(p5Instance) {
+		p5Instance.push();
+		
+		// draw title
+		p5Instance.textSize(this.titleSize);
+		noStroke();
+		textFont(CARD_FONT);
+		textAlign(CENTER, TOP);
+		fill(40);
+		text(this.titleText, this.titleCenterX + .005*this.menuHeight, this.titleCenterY + .005*this.menuHeight);
+		fill(255);
+		text(this.titleText, this.titleCenterX, this.titleCenterY);
+		p5Instance.pop();
+
+		// draw buttons
+		for (let button of this.buttons) {
+			button.draw(p5Instance);
+		}
+	}
+}
