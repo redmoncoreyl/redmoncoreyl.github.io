@@ -48,7 +48,7 @@ class HoldemHand {
 	}
 
 	static #isWideScreen(screenWidth, screenHeight) {
-		return screenWidth > screenHeight * WIDE_SCREEN_HEIGHT_MULTIPLE;
+		return screenWidth > screenHeight * HoldemHand.WIDE_SCREEN_HEIGHT_MULTIPLE;
 	}
 
 	/**
@@ -65,7 +65,7 @@ class HoldemHand {
 	 * the 3 hole pairs on top (when screen is fully narrowed).
 	 */
 	static #wideScreenMaxCardWidth(screenWidth) {
-		return screenWidth/(7 + 2*FANNED_CARD_WIDTH_MULTIPLE + 6*NARROW_SPACING_CARD_WIDTH_MULTIPLE + 2*WIDE_SPACING_CARD_WIDTH_MULTIPLE);
+		return screenWidth/(7 + 2*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE + 6*HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE + 2*HoldemHand.WIDE_SPACING_CARD_WIDTH_MULTIPLE);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class HoldemHand {
 	 * So, y = H/(3 + 2*n*c + 2*w*c)
 	 */
 	static #wideScreenMaxCardHeight(screenHeight) {
-		return screenHeight/(3 + 2*NARROW_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1) + 2*WIDE_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1));
+		return screenHeight/(3 + 2*HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1) + 2*HoldemHand.WIDE_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1));
 	}
 
 	/**
@@ -97,7 +97,7 @@ class HoldemHand {
 	 * the 2 hole pairs on top (when screen is fully narrowed).
 	 */
 	static #narrowScreenMaxCardWidth(screenWidth) {
-		return screenWidth/(4 + 4*FANNED_CARD_WIDTH_MULTIPLE + 2*NARROW_SPACING_CARD_WIDTH_MULTIPLE + 3*WIDE_SPACING_CARD_WIDTH_MULTIPLE);
+		return screenWidth/(4 + 4*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE + 2*HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE + 3*HoldemHand.WIDE_SPACING_CARD_WIDTH_MULTIPLE);
 	}
 
 	/**
@@ -113,7 +113,7 @@ class HoldemHand {
 	 * So, y = H/(3 + 2*o + 2*n*c + 2*w*c)
 	 */
 	static #narrowScreenMaxCardHeight(screenHeight) {
-		return screenHeight/(3 + 2*NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE + 2*NARROW_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1) + 2*WIDE_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1));
+		return screenHeight/(3 + 2*HoldemHand.NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE + 2*HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1) + 2*HoldemHand.WIDE_SPACING_CARD_WIDTH_MULTIPLE*Card.width(1));
 	}
 
 	static #maxCardWidth(screenWidth, isWideScreen) {
@@ -135,7 +135,7 @@ class HoldemHand {
 		}
 	}
 
-	constructor(numPlayers) {
+	constructor(numPlayers, screenWidth, screenHeight) {
 		this.numPlayers = numPlayers;
 		this.deck = new CardDeck(true);
 		this.holeCards = [];
@@ -143,139 +143,44 @@ class HoldemHand {
 			this.holeCards.push([this.deck.deal(), this.deck.deal()]);
 		}
 		this.communityCards = [];
-		for (let i = 0; i < NUM_COMMUNITY_CARDS; i++) {
+		for (let i = 0; i < HoldemHand.NUM_COMMUNITY_CARDS; i++) {
 			this.communityCards.push(this.deck.deal());
 		}
 		this.isPlayerWinning = HoldemHand.#determineWinners(this.communityCards, this.holeCards);
 		this.selectedPlayers = Array(numPlayers).fill(false);
-	}
-
-	draw(screenWidth, screenHeight) {
-		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
-
-		this.drawCommunityCards(screenWidth, screenHeight);
-		this.drawHoleCards(screenWidth, screenHeight);
-	}
-
-	drawCommunityCards(screenWidth, screenHeight) {
-		// spacing
-		let [cardWidth, ] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
-		let wideScreenSpacing = cardWidth * (1 + NARROW_SPACING_CARD_WIDTH_MULTIPLE);
-		let narrowScreenSpacing = cardWidth * FANNED_CARD_WIDTH_MULTIPLE;
-		let spacing = HoldemHand.#isWideScreen(screenWidth, screenHeight) ? wideScreenSpacing : narrowScreenSpacing;
 		
-		// draw community cards
-		let communityX = screenWidth/2 - 2*(spacing);
-		let communityY = height/2;
-		for (let card of this.communityCards) {
-			card.draw(communityX, communityY, cardWidth, CENTER, CENTER);
-			communityX += spacing;
+		this.resize(screenWidth, screenHeight);
+	}
+
+	resize(screenWidth, screenHeight) {
+		[this.cardWidth, ] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
+		this.communityCardLocations = this.generateCommunityCardLocations(screenWidth, screenHeight);
+		this.holeCardLocations = this.generateHoleCardLocations(screenWidth, screenHeight);
+	}
+
+	draw(p5Instance) {
+		this.drawCommunityCards(p5Instance);
+		this.drawHoleCards(p5Instance);
+	}
+
+	drawCommunityCards(p5Instance) {
+		for (let i = 0; i < HoldemHand.NUM_COMMUNITY_CARDS; i++) {
+			let cardX = this.communityCardLocations[i].centerX;
+			let cardY = this.communityCardLocations[i].centerY;
+			this.communityCards[i].draw(p5Instance, cardX, cardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
 		}
 	}
 
-	drawHoleCards(screenWidth, screenHeight) {
-		let holeCardLocations = this.generateHoleCardLocations(screenWidth, screenHeight);
-		
-		let [cardWidth, ] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
+	drawHoleCards(p5Instance) {
 		for (let i = 0; i < this.numPlayers; i++) {
-			this.holeCards[i][0].draw(holeCardLocations[i].firstCardCenterX, holeCardLocations[i].firstCardCenterY, cardWidth, CENTER, CENTER);
-			this.holeCards[i][1].draw(holeCardLocations[i].secondCardCenterX, holeCardLocations[i].secondCardCenterY, cardWidth, CENTER, CENTER);
+			let cardX = this.holeCardLocations[i].firstCardCenterX;
+			let cardY = this.holeCardLocations[i].firstCardCenterY;
+			this.holeCards[i][0].draw(p5Instance, cardX, cardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
+
+			cardX = this.holeCardLocations[i].secondCardCenterX;
+			cardY = this.holeCardLocations[i].secondCardCenterY;
+			this.holeCards[i][1].draw(p5Instance, cardX, cardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
 		}
-	}
-
-	generateHoleCardLocations(screenWidth, screenHeight) {
-		if (HoldemHand.#isWideScreen(screenWidth, screenHeight)) {
-			return this.generateWideScreenHoleCardsLocations(screenWidth, screenHeight);
-		} else {
-			return this.generateNarrowScreenHoleCardsLocations(screenWidth, screenHeight);
-		}
-	}
-
-	generateWideScreenHoleCardsLocations(screenWidth, screenHeight) {
-		// spacing
-		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
-		let holePairWidth = cardWidth + cardWidth*FANNED_CARD_WIDTH_MULTIPLE;
-		let narrowSpacing = cardWidth * NARROW_SPACING_CARD_WIDTH_MULTIPLE;
-		let horizontalSpaceBetweenHolePairs = (screenWidth - 2*narrowSpacing - 5*holePairWidth)/4;
-		let sideCardsVerticalSpaceBetweenHolePairs = (screenHeight - 2*narrowSpacing - 2*cardHeight)/3;
-
-		// generate x array
-		let centerXArray = [];
-		let centerX = narrowSpacing + cardWidth/2;
-		for (let i = 0; i < 5; i++) {
-			centerXArray.push(centerX);
-			centerX += holePairWidth + horizontalSpaceBetweenHolePairs;
-		}
-		centerXArray = centerXArray.concat(centerXArray.map(x => screenWidth - x - cardWidth*FANNED_CARD_WIDTH_MULTIPLE));
-
-		// generate y array
-		let topCardsCenterY = narrowSpacing + cardHeight/2;
-		let sideTopCardsCenterY = narrowSpacing + sideCardsVerticalSpaceBetweenHolePairs + cardHeight/2;
-		let centerYArray = [sideTopCardsCenterY, topCardsCenterY, topCardsCenterY, topCardsCenterY, sideTopCardsCenterY];
-		centerYArray = centerYArray.concat(centerYArray.map(y => screenHeight - y));
-
-		let locations = [];
-		for (let i = 0; i < this.numPlayers; i++) {
-			locations.push({
-				'firstCardCenterX': centerXArray[i],
-				'firstCardCenterY': centerYArray[i],
-				'secondCardCenterX': centerXArray[i] + cardWidth*FANNED_CARD_WIDTH_MULTIPLE,
-				'secondCardCenterY': centerYArray[i],
-				'left': centerXArray[i] - cardWidth/2,
-				'top': centerYArray[i] - cardHeight/2,
-				'right': centerXArray[i] + cardWidth*FANNED_CARD_WIDTH_MULTIPLE + cardWidth/2,
-				'bottom': centerYArray[i] + cardHeight/2,
-				'width': holePairWidth,
-				'height': cardHeight,
-				'index': i
-			});
-		}
-
-		return locations;
-	}
-
-	generateNarrowScreenHoleCardsLocations(screenWidth, screenHeight) {
-		// spacing
-		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
-		let holePairWidth = cardWidth + cardWidth*FANNED_CARD_WIDTH_MULTIPLE;
-		let narrowSpacing = cardWidth * NARROW_SPACING_CARD_WIDTH_MULTIPLE;
-		let horizontalSpaceBetweenHolePairs = (screenWidth - 2*narrowSpacing - 4*holePairWidth)/3;
-		let sideCardsVerticalSpaceBetweenHolePairs = (screenHeight - 2*narrowSpacing - 3*cardHeight - 2*cardHeight*NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE)/4;
-
-		// generate x array
-		let centerXArray = [];
-		let centerX = narrowSpacing + cardWidth/2;
-		centerXArray.push(centerX);
-		for (let i = 0; i < 4; i++) {
-			centerXArray.push(centerX);
-			centerX += holePairWidth + horizontalSpaceBetweenHolePairs;
-		}
-		centerXArray = centerXArray.concat(centerXArray.map(x => screenWidth - x - cardWidth*FANNED_CARD_WIDTH_MULTIPLE));
-
-		// generate y array
-		let topCardsCenterY = narrowSpacing + cardHeight/2;
-		let sideTopCardsCenterY = screenHeight/2 - cardHeight - sideCardsVerticalSpaceBetweenHolePairs;
-		let centerYArray = [screenHeight/2, sideTopCardsCenterY, topCardsCenterY, topCardsCenterY, sideTopCardsCenterY];
-		centerYArray = centerYArray.concat(centerYArray.map(y => screenHeight - y));
-
-		let locations = [];
-		for (let i = 0; i < this.numPlayers; i++) {
-			locations.push({
-				'firstCardCenterX': centerXArray[i],
-				'firstCardCenterY': centerYArray[i],
-				'secondCardCenterX': centerXArray[i] + cardWidth*FANNED_CARD_WIDTH_MULTIPLE,
-				'secondCardCenterY': centerYArray[i],
-				'left': centerXArray[i] - cardWidth/2,
-				'top': centerYArray[i] - cardHeight/2,
-				'right': centerXArray[i] + cardWidth*FANNED_CARD_WIDTH_MULTIPLE + cardWidth/2,
-				'bottom': centerYArray[i] + cardHeight/2,
-				'width': holePairWidth,
-				'height': cardHeight,
-				'index': i
-			});
-		}
-
-		return locations;
 	}
 
 	handleMouseClick(mouseX, mouseY, mouseButton, screenWidth, screenHeight) {
@@ -291,5 +196,128 @@ class HoldemHand {
 			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
 			console.log(isCorrect);
 		}
+	}
+
+	generateCommunityCardLocations(screenWidth, screenHeight) {
+		// spacing
+		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
+		let wideScreenSpacing = cardWidth * (1 + HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE);
+		let narrowScreenSpacing = cardWidth * HoldemHand.FANNED_CARD_WIDTH_MULTIPLE;
+		let spacing = HoldemHand.#isWideScreen(screenWidth, screenHeight) ? wideScreenSpacing : narrowScreenSpacing;
+		
+		// draw community cards
+		let cardX = screenWidth/2 - 2*(spacing);
+		let cardY = screenHeight/2;
+		let locations = [];
+		for (let i = 0; i < HoldemHand.NUM_COMMUNITY_CARDS; i++) {
+			locations.push({
+				'centerX': cardX,
+				'centerY': cardY,
+				'left': cardX- cardWidth/2,
+				'top': cardY - cardHeight/2,
+				'right': cardX + cardWidth/2,
+				'bottom': cardY + cardHeight/2,
+				'width': cardWidth,
+				'height': cardHeight,
+				'index': i
+			});
+			cardX += spacing;
+		}
+		return locations;
+	}
+
+	generateHoleCardLocations(screenWidth, screenHeight) {
+		if (HoldemHand.#isWideScreen(screenWidth, screenHeight)) {
+			return this.generateWideScreenHoleCardsLocations(screenWidth, screenHeight);
+		} else {
+			return this.generateNarrowScreenHoleCardsLocations(screenWidth, screenHeight);
+		}
+	}
+
+	generateWideScreenHoleCardsLocations(screenWidth, screenHeight) {
+		// spacing
+		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
+		let holePairWidth = cardWidth + cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE;
+		let narrowSpacing = cardWidth * HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE;
+		let horizontalSpaceBetweenHolePairs = (screenWidth - 2*narrowSpacing - 5*holePairWidth)/4;
+		let sideCardsVerticalSpaceBetweenHolePairs = (screenHeight - 2*narrowSpacing - 2*cardHeight)/3;
+
+		// generate x array
+		let centerXArray = [];
+		let centerX = narrowSpacing + cardWidth/2;
+		for (let i = 0; i < 5; i++) {
+			centerXArray.push(centerX);
+			centerX += holePairWidth + horizontalSpaceBetweenHolePairs;
+		}
+		centerXArray = centerXArray.concat(centerXArray.map(x => screenWidth - x - cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE));
+
+		// generate y array
+		let topCardsCenterY = narrowSpacing + cardHeight/2;
+		let sideTopCardsCenterY = narrowSpacing + sideCardsVerticalSpaceBetweenHolePairs + cardHeight/2;
+		let centerYArray = [sideTopCardsCenterY, topCardsCenterY, topCardsCenterY, topCardsCenterY, sideTopCardsCenterY];
+		centerYArray = centerYArray.concat(centerYArray.map(y => screenHeight - y));
+
+		let locations = [];
+		for (let i = 0; i < this.numPlayers; i++) {
+			locations.push({
+				'firstCardCenterX': centerXArray[i],
+				'firstCardCenterY': centerYArray[i],
+				'secondCardCenterX': centerXArray[i] + cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE,
+				'secondCardCenterY': centerYArray[i],
+				'left': centerXArray[i] - cardWidth/2,
+				'top': centerYArray[i] - cardHeight/2,
+				'right': centerXArray[i] + cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE + cardWidth/2,
+				'bottom': centerYArray[i] + cardHeight/2,
+				'width': holePairWidth,
+				'height': cardHeight,
+				'index': i
+			});
+		}
+
+		return locations;
+	}
+
+	generateNarrowScreenHoleCardsLocations(screenWidth, screenHeight) {
+		// spacing
+		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);
+		let holePairWidth = cardWidth + cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE;
+		let narrowSpacing = cardWidth * HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE;
+		let horizontalSpaceBetweenHolePairs = (screenWidth - 2*narrowSpacing - 4*holePairWidth)/3;
+		let sideCardsVerticalSpaceBetweenHolePairs = (screenHeight - 2*narrowSpacing - 3*cardHeight - 2*cardHeight*HoldemHand.NARROW_SCREEN_TOP_CARDS_OFFSET_HEIGHT_MULTIPLE)/4;
+
+		// generate x array
+		let centerXArray = [];
+		let centerX = narrowSpacing + cardWidth/2;
+		centerXArray.push(centerX);
+		for (let i = 0; i < 4; i++) {
+			centerXArray.push(centerX);
+			centerX += holePairWidth + horizontalSpaceBetweenHolePairs;
+		}
+		centerXArray = centerXArray.concat(centerXArray.map(x => screenWidth - x - cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE));
+
+		// generate y array
+		let topCardsCenterY = narrowSpacing + cardHeight/2;
+		let sideTopCardsCenterY = screenHeight/2 - cardHeight - sideCardsVerticalSpaceBetweenHolePairs;
+		let centerYArray = [screenHeight/2, sideTopCardsCenterY, topCardsCenterY, topCardsCenterY, sideTopCardsCenterY];
+		centerYArray = centerYArray.concat(centerYArray.map(y => screenHeight - y));
+
+		let locations = [];
+		for (let i = 0; i < this.numPlayers; i++) {
+			locations.push({
+				'firstCardCenterX': centerXArray[i],
+				'firstCardCenterY': centerYArray[i],
+				'secondCardCenterX': centerXArray[i] + cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE,
+				'secondCardCenterY': centerYArray[i],
+				'left': centerXArray[i] - cardWidth/2,
+				'top': centerYArray[i] - cardHeight/2,
+				'right': centerXArray[i] + cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE + cardWidth/2,
+				'bottom': centerYArray[i] + cardHeight/2,
+				'width': holePairWidth,
+				'height': cardHeight,
+				'index': i
+			});
+		}
+
+		return locations;
 	}
 }
