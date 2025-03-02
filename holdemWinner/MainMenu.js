@@ -56,13 +56,13 @@ class MainMenu {
 		
 		// draw title
 		p5Instance.textSize(this.titleSize);
-		noStroke();
-		textFont(CARD_FONT);
-		textAlign(CENTER, TOP);
-		fill(40);
-		text(this.titleText, this.titleCenterX + .005*this.menuHeight, this.titleCenterY + .005*this.menuHeight);
-		fill(255);
-		text(this.titleText, this.titleCenterX, this.titleCenterY);
+		p5Instance.noStroke();
+		p5Instance.textFont(CARD_FONT);
+		p5Instance.textAlign(p5Instance.CENTER, p5Instance.TOP);
+		p5Instance.fill(40);
+		p5Instance.text(this.titleText, this.titleCenterX + .005*this.menuHeight, this.titleCenterY + .005*this.menuHeight);
+		p5Instance.fill(255);
+		p5Instance.text(this.titleText, this.titleCenterX, this.titleCenterY);
 		p5Instance.pop();
 
 		// draw buttons
