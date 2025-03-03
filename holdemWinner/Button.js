@@ -11,6 +11,8 @@ class Button {
 		this.hoverColor = hoverColor;
 		this.textColor = textColor;
 		this.strokeColor = strokeColor;
+
+		this.callback = null;
 	}
 
 	draw(p5Instance) {
@@ -49,5 +51,15 @@ class Button {
 		this.height = height;
 		this.cornerRadius = cornerRadius;
 		this.strokeWeight = strokeWeight;
+	}
+
+	registerCallback(callback) {
+		this.callback = callback;
+	}
+
+	click(mouseX, mouseY) {
+		if (this.isHover(mouseX, mouseY)) {
+			this.callback();
+		}
 	}
 }
