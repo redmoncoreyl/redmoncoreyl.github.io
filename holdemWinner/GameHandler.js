@@ -28,21 +28,27 @@ class GameHandler {
 		// escape should pause game
 		this.gameState = GameHandler.#GameState.MENU;
 		this.menu = new MainMenu(screenWidth, screenHeight);
+		this.helpScreen = new HelpScreen(screenWidth, screenHeight);
 	}
 
 	draw(p5Instance) {
 		if (this.gameState === GameHandler.#GameState.MENU) {
 			this.menu.draw(p5Instance);
+		} else if (this.gameState === GameHandler.#GameState.HELP) {
+			this.helpScreen.draw(p5Instance);
 		}
 	}
 
 	resize(screenWidth, screenHeight) {
 		this.menu.resize(screenWidth, screenHeight);
+		this.helpScreen.resize(screenWidth, screenHeight);
 	}
 
 	handleMouseClick(mouseX, mouseY) {
 		if (this.gameState === GameHandler.#GameState.MENU) {
-			console.log(this.menu.handleMouseClick(mouseX, mouseY));
+			this.gameState = this.menu.handleMouseClick(mouseX, mouseY);
+		}  else if (this.gameState === GameHandler.#GameState.HELP) {
+			this.gameState = this.helpScreen.handleMouseClick(mouseX, mouseY);
 		}
 	}
 }

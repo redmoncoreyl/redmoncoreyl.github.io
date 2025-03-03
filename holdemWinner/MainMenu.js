@@ -77,5 +77,6 @@ class MainMenu {
 				return button.gameMode;
 			}
 		}
+		return GameHandler.GameState.MENU;
 	}
 }

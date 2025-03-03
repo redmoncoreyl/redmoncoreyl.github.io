@@ -26,6 +26,13 @@ function mousePressed(event) {
 	game.handleMouseClick(mouseX, mouseY);
 }
 
+function touchEnded() {
+	if (ignoreMouseDown) {
+		mouseX = -1;
+		mouseY = -1;
+	}
+}
+
 function setup() {
 	createCanvas(window.innerWidth, window.innerHeight);
 	game = new GameHandler(width, height);
