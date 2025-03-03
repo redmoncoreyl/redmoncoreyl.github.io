@@ -12,14 +12,15 @@ class MainMenu {
 		this.titleText = 'TEXAS HOLD \'EM\nWINNERS';
 
 		// buttons
-		this.buttonColor = (new p5(() => {})).color(178, 219, 181);
-		this.buttonHoverColor = (new p5(() => {})).color(127, 163, 138);
+		this.buttonColor = (new p5(() => {})).color(6, 50, 15);
+		this.buttonHoverColor = (new p5(() => {})).color(2, 20, 4);
+		this.buttonTextColor = (new p5(() => {})).color(235);
 		this.buttonsText = ['Time Trial', 'Arcade', 'Free Play', 'Help'];
 		let gameModes = [GameHandler.GameState.TIME_TRIAL, GameHandler.GameState.ARCADE, GameHandler.GameState.FREE_PLAY, GameHandler.GameState.HELP];
 		this.buttons = [];
 		for (let i = 0; i < this.buttonsText.length; i++) {
 			this.buttons.push({
-				buttonObj: new Button(this.buttonsText[i], 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, null),
+				buttonObj: new Button(this.buttonsText[i], 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null),
 				gameMode: gameModes[i]
 			});
 		}

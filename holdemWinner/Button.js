@@ -1,5 +1,5 @@
 class Button {
-	constructor(text, x, y, width, height, cornerRadius, strokeWeight, color, hoverColor, strokeColor) {
+	constructor(text, x, y, width, height, cornerRadius, strokeWeight, color, hoverColor, textColor, strokeColor) {
 		this.text = text;
 		this.x = x;
 		this.y = y;
@@ -9,6 +9,7 @@ class Button {
 		this.strokeWeight = strokeWeight;
 		this.color = color;
 		this.hoverColor = hoverColor;
+		this.textColor = textColor;
 		this.strokeColor = strokeColor;
 	}
 
@@ -28,7 +29,7 @@ class Button {
 		p5Instance.textSize(this.height*0.85);
 		p5Instance.textAlign(p5Instance.CENTER, p5Instance.CENTER);
 		p5Instance.noStroke();
-		p5Instance.fill(0);
+		p5Instance.fill(this.textColor);
 		p5Instance.text(this.text, this.x + this.width/2, this.y + this.height/2);
 		p5Instance.pop();
 	}

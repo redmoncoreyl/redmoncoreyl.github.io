@@ -23,7 +23,7 @@ function mousePressed(event) {
 	if (event.type === 'touchstart') ignoreMouseDown = true;
 	if (ignoreMouseDown && event.type === 'mousedown') return;
 
-	game.handleMouseClick(mouseX, mouseY);
+	game.handleMouseClick(this);
 }
 
 function touchEnded() {
@@ -39,6 +39,6 @@ function setup() {
 }
 
 function draw() {
-	background(3, 115, 55);
+	background(3, 110, 43);
 	game.draw(this);
 }

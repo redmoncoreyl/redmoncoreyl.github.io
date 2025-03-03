@@ -22,7 +22,6 @@ class GameHandler {
 		//     - number of players (6)
 		// free play - no time limits
 		//     - number of players (6)
-		//     - fail on incorrect guess [n]
 		// help
 
 		// escape should pause game
@@ -36,19 +35,31 @@ class GameHandler {
 			this.menu.draw(p5Instance);
 		} else if (this.gameState === GameHandler.#GameState.HELP) {
 			this.helpScreen.draw(p5Instance);
+		} else {
+			this.game.draw(p5Instance);
 		}
 	}
 
 	resize(screenWidth, screenHeight) {
 		this.menu.resize(screenWidth, screenHeight);
 		this.helpScreen.resize(screenWidth, screenHeight);
+		if (this.game) this.game.resize(screenWidth, screenHeight);
 	}
 
-	handleMouseClick(mouseX, mouseY) {
+	handleMouseClick(p5Instance) {
+		let mouseX = p5Instance.mouseX;
+		let mouseY = p5Instance.mouseY;
+		let screenWidth = p5Instance.width;
+		let screenHeight = p5Instance.height;
+
 		if (this.gameState === GameHandler.#GameState.MENU) {
 			this.gameState = this.menu.handleMouseClick(mouseX, mouseY);
 		}  else if (this.gameState === GameHandler.#GameState.HELP) {
 			this.gameState = this.helpScreen.handleMouseClick(mouseX, mouseY);
+		}
+
+		if (this.gameState === GameHandler.#GameState.TIME_TRIAL) {
+			this.game = new TimeTrialGame(screenWidth, screenHeight);
 		}
 	}
 }
