@@ -36,11 +36,11 @@ class MainMenu {
 		this.menuRight = screenWidth - this.menuLeft;
 
 		this.titleCenterX = (this.menuLeft + this.menuRight)/2;
-		this.titleCenterY = 0.049 * this.menuHeight + (screenHeight - this.menuHeight)/2;
+		this.titleTopY = 0.049 * this.menuHeight + this.menuTop;
 		this.titleSize = 0.09 * this.menuHeight;
 
 		let buttonLeftX = 0.075 * this.menuWidth + this.menuLeft;
-		let buttonCenterY = 0.34 * this.menuHeight + (screenHeight - this.menuHeight)/2;
+		let buttonCenterY = 0.34 * this.menuHeight + this.menuTop;
 		let buttonWidth = 0.85 * this.menuWidth;
 		let buttonHeight = 0.1 * this.menuHeight;
 		let cornerRadius = 0.2*buttonHeight;
@@ -60,9 +60,9 @@ class MainMenu {
 		p5Instance.textFont(CARD_FONT);
 		p5Instance.textAlign(p5Instance.CENTER, p5Instance.TOP);
 		p5Instance.fill(40);
-		p5Instance.text(this.titleText, this.titleCenterX + .005*this.menuHeight, this.titleCenterY + .005*this.menuHeight);
+		p5Instance.text(this.titleText, this.titleCenterX + .005*this.menuHeight, this.titleTopY + .005*this.menuHeight);
 		p5Instance.fill(255);
-		p5Instance.text(this.titleText, this.titleCenterX, this.titleCenterY);
+		p5Instance.text(this.titleText, this.titleCenterX, this.titleTopY);
 		p5Instance.pop();
 
 		// draw buttons
