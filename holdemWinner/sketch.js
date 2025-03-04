@@ -9,6 +9,7 @@ let CARD_FONT;
 let CORRECT_SOUND_EFFECT;
 let INCORRECT_SOUND_EFFECT;
 let game;
+let touchStartTime = null;
 
 function preload() {
 	let suitImages = {};
@@ -27,25 +28,29 @@ function preload() {
 	INCORRECT_SOUND_EFFECT.setVolume(2.5);
 }
 
-function mousePressed(event) {
-	game.handleMouseClick(this);
-}
-
-function mouseReleased(event) {
-}
-
 function keyPressed(event) {
 	if (event.key === 'Escape') {
 		game = new GameHandler(width, height);
 	}
 }
 
+function mousePressed(event) {
+	touchStartTime = Date.now();
+	game.handleMouseClick(this);
+}
+
 function touchStarted(event) {
+	touchStartTime = Date.now();
 	event.preventDefault();
 	game.handleMouseClick(this);
 }
 
+function mouseReleased(event) {
+	touchStartTime = null;
+}
+
 function touchEnded(event) {
+	touchStartTime = null;
 	event.preventDefault();
 	mouseX = -1;
 	mouseY = -1;
@@ -59,4 +64,8 @@ function setup() {
 function draw() {
 	background(3, 110, 43);
 	game.draw(this);
+
+	if (touchStartTime && Date.now() - touchStartTime > 5000) {
+		game = new GameHandler(width, height);
+	}
 }
