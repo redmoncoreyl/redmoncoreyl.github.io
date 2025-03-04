@@ -218,7 +218,8 @@ class HoldemHand {
 
 		if (mouseButton == p5Instance.RIGHT) {
 			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
-			console.log(isCorrect);
+			if (isCorrect) CORRECT_SOUND_EFFECT.play();
+			else INCORRECT_SOUND_EFFECT.play();
 		}
 	}
 

@@ -6,6 +6,8 @@ window.onresize = () => {
 document.addEventListener('contextmenu', event => event.preventDefault());
 
 let CARD_FONT;
+let CORRECT_SOUND_EFFECT;
+let INCORRECT_SOUND_EFFECT;
 let game;
 
 function preload() {
@@ -16,6 +18,13 @@ function preload() {
 	suitImages['Diamonds'] = loadImage('assets/diamonds.svg');
 	Suit.preload(suitImages);
 	CARD_FONT = loadFont('assets/card_font.ttf');
+
+	// sounds
+	soundFormats('mp3');
+	CORRECT_SOUND_EFFECT = loadSound('assets/correct.mp3');
+	INCORRECT_SOUND_EFFECT = loadSound('assets/incorrect.mp3');
+	CORRECT_SOUND_EFFECT.setVolume(0.9);
+	INCORRECT_SOUND_EFFECT.setVolume(2.5);
 }
 
 function mousePressed(event) {
