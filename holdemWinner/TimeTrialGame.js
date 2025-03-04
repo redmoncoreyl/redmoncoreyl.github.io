@@ -46,10 +46,12 @@ class TimeTrialGame {
 		});
 
 		this.holdemHand = null;
+		this.startTime = null;
 
 		this.settingsStartButton.registerCallback(() => {
 			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
 			this.isSettings = false;
+			this.startTime = Date.now();
 		});
 	}
 
@@ -119,7 +121,16 @@ class TimeTrialGame {
 
 	draw(p5Instance) {
 		if (this.isSettings) this.drawSettings(p5Instance);
-		else this.holdemHand.draw(p5Instance);
+		else {
+			this.holdemHand.draw(p5Instance);
+			if (Date.now() - this.startTime > (this.totalTime-5)*1000) {
+				let millis = (Date.now() - this.startTime - 500) % 1000;
+				let angle = millis/1000*2*Math.PI;
+				let cos = (Math.cos(angle) + 1)/2;
+				let alpha = cos*120;
+				p5Instance.background(242, 52, 39, alpha);
+			}
+		}
 	}
 
 	drawSettings(p5Instance) {
