@@ -38,7 +38,7 @@ class TimeTrialGame {
 		});
 		this.numPlayersDecButton.registerCallback(() => {
 			this.numPlayers--;
-			if (this.numPlayers < 1) this.numPlayers = 1;
+			if (this.numPlayers < 2) this.numPlayers = 2;
 		});
 		this.numPlayersIncButton.registerCallback(() => {
 			this.numPlayers++;
