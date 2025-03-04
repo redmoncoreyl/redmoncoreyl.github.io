@@ -208,18 +208,23 @@ class HoldemHand {
 		let mouseButton = p5Instance.mouseButton;
 		let screenWidth = p5Instance.width;
 		let screenHeight = p5Instance.height;
-		if (mouseButton == p5Instance.LEFT) {
+
+		let communityX1 = this.communityCardLocations[0].left;
+		let communityY1 = this.communityCardLocations[0].top;
+		let communityX2 = this.communityCardLocations[this.communityCardLocations.length-1].right;
+		let communityY2 = this.communityCardLocations[this.communityCardLocations.length-1].bottom;
+		let isCommunityClick = mouseX > communityX1 && mouseX < communityX2 && mouseY > communityY1 && mouseY < communityY2;
+
+		if (mouseButton === p5Instance.RIGHT || isCommunityClick) {
+			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
+			if (isCorrect) CORRECT_SOUND_EFFECT.play();
+			else INCORRECT_SOUND_EFFECT.play();
+		} else {
 			let holeCardLocations = this.generateHoleCardLocations(screenWidth, screenHeight);
 			let isHoleCardClicked = holeCardLocations.map(location => (mouseX >= location.left &&
 				mouseX <= location.right && mouseY >= location.top && mouseY <= location.bottom)
 			);
 			this.selectedPlayers = this.selectedPlayers.map((isSelected, i) => (isSelected != isHoleCardClicked[i]));
-		}
-
-		if (mouseButton == p5Instance.RIGHT) {
-			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
-			if (isCorrect) CORRECT_SOUND_EFFECT.play();
-			else INCORRECT_SOUND_EFFECT.play();
 		}
 	}
 
