@@ -24,6 +24,15 @@ class TimeTrialGame {
 		this.totalTime = 120;
 		
 		this.resize(screenWidth, screenHeight);
+
+		this.totalTimeDecButton.registerCallback(() => {
+			this.totalTime -= 10;
+			if (this.totalTime < 10) this.totalTime = 10;
+		});
+		this.totalTimeIncButton.registerCallback(() => {
+			this.totalTime += 10;
+			if (this.totalTime > 300) this.totalTime = 300;
+		});
 	}
 
 	resize(screenWidth, screenHeight) {
@@ -115,5 +124,10 @@ class TimeTrialGame {
 		this.settingsStartButton.draw(p5Instance);
 		this.totalTimeDecButton.draw(p5Instance);
 		this.totalTimeIncButton.draw(p5Instance);
+	}
+
+	handleMouseClick(mouseX, mouseY) {
+		this.totalTimeDecButton.click(mouseX, mouseY);
+		this.totalTimeIncButton.click(mouseX, mouseY);
 	}
 }
