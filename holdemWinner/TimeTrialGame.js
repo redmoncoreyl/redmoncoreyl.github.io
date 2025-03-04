@@ -179,11 +179,17 @@ class TimeTrialGame {
 		this.numPlayersIncButton.draw(p5Instance);
 	}
 
-	handleMouseClick(mouseX, mouseY) {
-		this.totalTimeDecButton.click(mouseX, mouseY);
-		this.totalTimeIncButton.click(mouseX, mouseY);
-		this.numPlayersDecButton.click(mouseX, mouseY);
-		this.numPlayersIncButton.click(mouseX, mouseY);
-		this.settingsStartButton.click(mouseX, mouseY);
+	handleMouseClick(p5Instance) {
+		let mouseX = p5Instance.mouseX;
+		let mouseY = p5Instance.mouseY;
+		if (this.isSettings) {
+			this.totalTimeDecButton.click(mouseX, mouseY);
+			this.totalTimeIncButton.click(mouseX, mouseY);
+			this.numPlayersDecButton.click(mouseX, mouseY);
+			this.numPlayersIncButton.click(mouseX, mouseY);
+			this.settingsStartButton.click(mouseX, mouseY);
+			return;
+		}
+		this.holdemHand.handleMouseClick(p5Instance);
 	}
 }

@@ -173,18 +173,42 @@ class HoldemHand {
 
 	drawHoleCards(p5Instance) {
 		for (let i = 0; i < this.numPlayers; i++) {
-			let cardX = this.holeCardLocations[i].firstCardCenterX;
-			let cardY = this.holeCardLocations[i].firstCardCenterY;
-			this.holeCards[i][0].draw(p5Instance, cardX, cardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
+			let firstCardX = this.holeCardLocations[i].firstCardCenterX;
+			let firstCardY = this.holeCardLocations[i].firstCardCenterY;
+			this.holeCards[i][0].draw(p5Instance, firstCardX, firstCardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
 
-			cardX = this.holeCardLocations[i].secondCardCenterX;
-			cardY = this.holeCardLocations[i].secondCardCenterY;
-			this.holeCards[i][1].draw(p5Instance, cardX, cardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
+			let secondCardX = this.holeCardLocations[i].secondCardCenterX;
+			let secondCardY = this.holeCardLocations[i].secondCardCenterY;
+			this.holeCards[i][1].draw(p5Instance, secondCardX, secondCardY, this.cardWidth, p5Instance.CENTER, p5Instance.CENTER);
+
+			let isPlayerSelected = this.selectedPlayers[i];
+			if(isPlayerSelected) {
+				let holePairWidth = this.cardWidth + this.cardWidth*HoldemHand.FANNED_CARD_WIDTH_MULTIPLE;
+				let cardHeight = Card.height(this.cardWidth);
+				let rectX = firstCardX - this.cardWidth/2;
+				let rectY = firstCardY - cardHeight/2;
+				this.drawSelectionRectangle(p5Instance, rectX, rectY, holePairWidth, cardHeight);
+			}
 		}
 	}
 
-	handleMouseClick(mouseX, mouseY, mouseButton, screenWidth, screenHeight) {
-		if (mouseButton == LEFT) {
+	drawSelectionRectangle(p5Instance, x, y, width, height) {
+		p5Instance.push();
+		p5Instance.noFill();
+		p5Instance.stroke(255, 0, 0);
+		let strokeWeight = height*.03;
+		p5Instance.strokeWeight(strokeWeight);
+		p5Instance.rect(x-strokeWeight*.3, y-strokeWeight*.3, width+strokeWeight*.6, height+strokeWeight*.6, height*.06);
+		p5Instance.pop();
+	}
+
+	handleMouseClick(p5Instance) {
+		let mouseX = p5Instance.mouseX;
+		let mouseY = p5Instance.mouseY;
+		let mouseButton = p5Instance.mouseButton;
+		let screenWidth = p5Instance.width;
+		let screenHeight = p5Instance.height;
+		if (mouseButton == p5Instance.LEFT) {
 			let holeCardLocations = this.generateHoleCardLocations(screenWidth, screenHeight);
 			let isHoleCardClicked = holeCardLocations.map(location => (mouseX >= location.left &&
 				mouseX <= location.right && mouseY >= location.top && mouseY <= location.bottom)
@@ -192,7 +216,7 @@ class HoldemHand {
 			this.selectedPlayers = this.selectedPlayers.map((isSelected, i) => (isSelected != isHoleCardClicked[i]));
 		}
 
-		if (mouseButton == RIGHT) {
+		if (mouseButton == p5Instance.RIGHT) {
 			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
 			console.log(isCorrect);
 		}
