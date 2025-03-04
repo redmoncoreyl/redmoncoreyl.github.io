@@ -217,8 +217,13 @@ class HoldemHand {
 
 		if (mouseButton === p5Instance.RIGHT || isCommunityClick) {
 			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
-			if (isCorrect) CORRECT_SOUND_EFFECT.play();
-			else INCORRECT_SOUND_EFFECT.play();
+			if (isCorrect) {
+				CORRECT_SOUND_EFFECT.play();
+				return true;
+			} else {
+				INCORRECT_SOUND_EFFECT.play();
+				return false;
+			}
 		} else {
 			let holeCardLocations = this.generateHoleCardLocations(screenWidth, screenHeight);
 			let isHoleCardClicked = holeCardLocations.map(location => (mouseX >= location.left &&

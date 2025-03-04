@@ -47,6 +47,8 @@ class TimeTrialGame {
 
 		this.holdemHand = null;
 		this.startTime = null;
+		this.correctGuesses = 0;
+		this.incorrectGuesses = 0;
 
 		this.settingsStartButton.registerCallback(() => {
 			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
@@ -190,6 +192,13 @@ class TimeTrialGame {
 			this.settingsStartButton.click(mouseX, mouseY);
 			return;
 		}
-		this.holdemHand.handleMouseClick(p5Instance);
+		let isCorrectGuess = this.holdemHand.handleMouseClick(p5Instance);
+		if (isCorrectGuess === undefined) return;
+		if (isCorrectGuess) {
+			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+			this.correctGuesses++;
+		} else {
+			this.incorrectGuesses++;
+		}
 	}
 }
