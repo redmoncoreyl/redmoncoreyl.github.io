@@ -8,7 +8,7 @@ class TimeTrialGame {
 	}
 
 	constructor(screenWidth, screenHeight) {
-		this.isSettingsShowing = true;
+		this.isSettings = true;
 
 		// settings title
 		this.settingsTitleText = 'TEXAS HOLD \'EM WINNERS';
@@ -20,8 +20,11 @@ class TimeTrialGame {
 		this.settingsStartButton = new Button('Start', 0, 0, 0, 0,  0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.totalTimeDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.totalTimeIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
+		this.numPlayersDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
+		this.numPlayersIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 
 		this.totalTime = 120;
+		this.numPlayers = 6;
 		
 		this.resize(screenWidth, screenHeight);
 
@@ -33,9 +36,26 @@ class TimeTrialGame {
 			this.totalTime += 10;
 			if (this.totalTime > 300) this.totalTime = 300;
 		});
+		this.numPlayersDecButton.registerCallback(() => {
+			this.numPlayers--;
+			if (this.numPlayers < 1) this.numPlayers = 1;
+		});
+		this.numPlayersIncButton.registerCallback(() => {
+			this.numPlayers++;
+			if (this.numPlayers > 10) this.numPlayers = 10;
+		});
+
+		this.holdemHand = null;
+
+		this.settingsStartButton.registerCallback(() => {
+			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+			this.isSettings = false;
+		});
 	}
 
 	resize(screenWidth, screenHeight) {
+		this.screenWidth = screenWidth;
+		this.screenHeight = screenHeight;
 		this.isWideScreen = screenWidth > (screenHeight * TimeTrialGame.#WIDE_SCREEN_HEIGHT_MULTIPLE);
 		this.menuWidth = this.isWideScreen ? screenHeight * TimeTrialGame.#WIDE_SCREEN_HEIGHT_MULTIPLE : screenWidth;
 		this.menuHeight = screenHeight;
@@ -79,10 +99,27 @@ class TimeTrialGame {
 		this.totalTimeRectY = totalTimeDecButtonY;
 		this.totalTimeRectHeight = this.buttonHeight;
 
+		// num players
+		settingsTextHeight = 1*this.helpTextSize;
+		let numPlayersDecButtonX = this.helpTextLeftX;
+		let numPlayersDecButtonY = totalTimeDecButtonY + this.buttonHeight + settingsTextHeight + 2*this.verticalPadding;
+		let numPlayersDecButtonWidth = this.buttonHeight;
+		let numPlayersIncButtonX = this.helpTextLeftX + this.helpTextWidth - numPlayersDecButtonWidth;
+		this.numPlayersDecButton.resize(numPlayersDecButtonX, numPlayersDecButtonY, numPlayersDecButtonWidth, this.buttonHeight, this.cornerRadius, 0);
+		this.numPlayersIncButton.resize(numPlayersIncButtonX, numPlayersDecButtonY, numPlayersDecButtonWidth, this.buttonHeight, this.cornerRadius, 0);
+		this.numPlayersRectWidth = this.helpTextWidth - 2*this.helpTextRectPadding - 2*numPlayersDecButtonWidth;
+		this.numPlayersRectX = screenWidth/2 - this.numPlayersRectWidth/2;
+		this.numPlayersRectY = numPlayersDecButtonY;
+		this.numPlayersRectHeight = this.buttonHeight;
+
+		if (!this.isSettings) {
+			this.holdemHand.resize(screenWidth, screenHeight);
+		}
 	}
 
 	draw(p5Instance) {
-		if (this.isSettingsShowing) this.drawSettings(p5Instance);
+		if (this.isSettings) this.drawSettings(p5Instance);
+		else this.holdemHand.draw(p5Instance);
 	}
 
 	drawSettings(p5Instance) {
@@ -98,7 +135,7 @@ class TimeTrialGame {
 		p5Instance.text(this.settingsTitleText, this.titleCenterX, this.titleTopY);
 		p5Instance.pop();
 
-		// draw settings
+		// draw settings labels
 		p5Instance.push();
 		p5Instance.fill(193, 225, 195);
 		p5Instance.noStroke();
@@ -108,26 +145,34 @@ class TimeTrialGame {
 		p5Instance.textSize(this.helpTextSize);
 		p5Instance.textLeading(this.helpTextSize);
 		p5Instance.text('Settings\n\nTotal time:', this.helpTextLeftX, this.helpTextTopY, this.helpTextWidth);
+		p5Instance.text('Player count:', this.helpTextLeftX, this.totalTimeRectY + this.buttonHeight + this.verticalPadding, this.helpTextWidth);
 		p5Instance.pop();
 
-		// draw total time buttons
+		// draw settings boxes
 		p5Instance.push();
 		p5Instance.noStroke();
 		p5Instance.fill(15, 80, 30);
 		p5Instance.rect(this.totalTimeRectX, this.totalTimeRectY, this.totalTimeRectWidth, this.totalTimeRectHeight, this.cornerRadius);
+		p5Instance.rect(this.numPlayersRectX, this.numPlayersRectY, this.numPlayersRectWidth, this.numPlayersRectHeight, this.cornerRadius);
 		p5Instance.fill(this.buttonTextColor);
 		p5Instance.textAlign(p5Instance.CENTER, p5Instance.CENTER);
 		p5Instance.textSize(this.helpTextSize);
-		p5Instance.text(this.totalTime + ' s', this.totalTimeRectX, this.totalTimeRectY, this.totalTimeRectWidth, this.totalTimeRectHeight)
+		p5Instance.text(this.totalTime + ' s', this.totalTimeRectX, this.totalTimeRectY, this.totalTimeRectWidth, this.totalTimeRectHeight);
+		p5Instance.text(this.numPlayers, this.numPlayersRectX, this.numPlayersRectY, this.numPlayersRectWidth, this.numPlayersRectHeight);
 		p5Instance.pop();
 
 		this.settingsStartButton.draw(p5Instance);
 		this.totalTimeDecButton.draw(p5Instance);
 		this.totalTimeIncButton.draw(p5Instance);
+		this.numPlayersDecButton.draw(p5Instance);
+		this.numPlayersIncButton.draw(p5Instance);
 	}
 
 	handleMouseClick(mouseX, mouseY) {
 		this.totalTimeDecButton.click(mouseX, mouseY);
 		this.totalTimeIncButton.click(mouseX, mouseY);
+		this.numPlayersDecButton.click(mouseX, mouseY);
+		this.numPlayersIncButton.click(mouseX, mouseY);
+		this.settingsStartButton.click(mouseX, mouseY);
 	}
 }
