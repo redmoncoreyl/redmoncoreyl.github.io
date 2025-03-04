@@ -7,7 +7,6 @@ document.addEventListener('contextmenu', event => event.preventDefault());
 
 let CARD_FONT;
 let game;
-let ignoreMouseDown = false;
 
 function preload() {
 	let suitImages = {};
@@ -20,17 +19,27 @@ function preload() {
 }
 
 function mousePressed(event) {
-	if (event.type === 'touchstart') ignoreMouseDown = true;
-	if (ignoreMouseDown && event.type === 'mousedown') return;
-
 	game.handleMouseClick(this);
 }
 
-function touchEnded() {
-	if (ignoreMouseDown) {
-		mouseX = -1;
-		mouseY = -1;
+function mouseReleased(event) {
+}
+
+function keyPressed(event) {
+	if (event.key === 'Escape') {
+		game = new GameHandler(width, height);
 	}
+}
+
+function touchStarted(event) {
+	event.preventDefault();
+	game.handleMouseClick(this);
+}
+
+function touchEnded(event) {
+	event.preventDefault();
+	mouseX = -1;
+	mouseY = -1;
 }
 
 function setup() {
