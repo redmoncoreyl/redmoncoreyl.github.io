@@ -43,9 +43,9 @@ class HelpScreen {
 		let buttonLeftX = 0.2 * this.menuWidth + this.menuLeft;
 		let buttonTopY = this.menuHeight - buttonHeight - 0.5*this.titleSize;
 		let buttonWidth = 0.6 * this.menuWidth;
-		let cornerRadius = 0.2*buttonHeight;
+		this.cornerRadius = 0.2*buttonHeight;
 		let buttonStrokeWeight = 0.03 * buttonHeight;
-		this.bottomButton.resize(buttonLeftX, buttonTopY, buttonWidth, buttonHeight, cornerRadius, buttonStrokeWeight);
+		this.bottomButton.resize(buttonLeftX, buttonTopY, buttonWidth, buttonHeight, this.cornerRadius, buttonStrokeWeight);
 
 		this.helpTextLeftX = this.menuLeft + 0.07*this.menuWidth;
 		this.helpTextTopY = this.menuTop + this.titleTopY + this.titleSize*1.9;
@@ -75,7 +75,7 @@ class HelpScreen {
 		p5Instance.push();
 		p5Instance.fill(193, 225, 195);
 		p5Instance.noStroke();
-		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight, this.helpTextRectPadding);
+		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight, this.cornerRadius);
 		p5Instance.fill(0);
 		p5Instance.textAlign(p5Instance.LEFT, p5Instance.TOP);
 		p5Instance.textSize(this.helpTextSize);
