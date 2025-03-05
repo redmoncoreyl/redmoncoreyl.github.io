@@ -60,7 +60,7 @@ class GameHandler {
 		}  else if (this.gameState === GameHandler.#GameState.HELP) {
 			this.gameState = this.helpScreen.handleMouseClick(mouseX, mouseY);
 		} else {
-			this.game.handleMouseClick(p5Instance);
+			this.gameState = this.game.handleMouseClick(p5Instance);
 		}
 	}
 }

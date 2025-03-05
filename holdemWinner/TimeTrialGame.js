@@ -32,6 +32,7 @@ class TimeTrialGame {
 		this.totalTimeIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
+		this.menuButton = new Button('Menu', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 
 		this.totalTime = 120;
 		this.numPlayers = 6;
@@ -56,14 +57,17 @@ class TimeTrialGame {
 		});
 
 		this.holdemHand = null;
+		this.lastHandRevealTime = null;
 		this.startTime = null;
 		this.correctGuesses = 0;
 		this.incorrectGuesses = 0;
+		this.handsViewed = 1;
 
 		this.settingsStartButton.registerCallback(() => {
 			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
 			this.gameState = TimeTrialGame.#GameState.PLAY;
 			this.startTime = Date.now();
+			this.lastHandRevealTime = Date.now();
 		});
 	}
 
@@ -126,6 +130,9 @@ class TimeTrialGame {
 		this.numPlayersRectY = numPlayersDecButtonY;
 		this.numPlayersRectHeight = this.buttonHeight;
 
+		// summary
+		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0)
+
 		if (this.gameState === TimeTrialGame.#GameState.PLAY) {
 			this.holdemHand.resize(screenWidth, screenHeight);
 		}
@@ -134,7 +141,7 @@ class TimeTrialGame {
 	draw(p5Instance) {
 		if (this.gameState === TimeTrialGame.#GameState.SETTINGS) {
 			this.drawSettings(p5Instance);
-		} else {
+		} else if (this.gameState === TimeTrialGame.#GameState.PLAY) {
 			this.holdemHand.draw(p5Instance);
 			if (Date.now() - this.startTime > (this.totalTime-5)*1000) {
 				let millis = (Date.now() - this.startTime - 500) % 1000;
@@ -143,6 +150,15 @@ class TimeTrialGame {
 				let alpha = cos*120;
 				p5Instance.background(242, 52, 39, alpha);
 			}
+
+			if (Date.now() - this.startTime > this.totalTime*1000) {
+				this.gameState = TimeTrialGame.#GameState.SUMMARY;
+				if (Date.now() - this.lastHandRevealTime < 1000) {
+					this.handsViewed--;
+				}
+			}
+		} else {
+			this.drawSummary(p5Instance);
 		}
 	}
 
@@ -192,6 +208,35 @@ class TimeTrialGame {
 		this.numPlayersIncButton.draw(p5Instance);
 	}
 
+	drawSummary(p5Instance) {
+		// draw title
+		p5Instance.push();
+		p5Instance.textSize(this.titleSize);
+		p5Instance.noStroke();
+		p5Instance.textFont(CARD_FONT);
+		p5Instance.textAlign(p5Instance.CENTER, p5Instance.TOP);
+		p5Instance.fill(40);
+		p5Instance.text(this.settingsTitleText, this.titleCenterX + .06*this.titleSize, this.titleTopY + .06*this.titleSize);
+		p5Instance.fill(255);
+		p5Instance.text(this.settingsTitleText, this.titleCenterX, this.titleTopY);
+		p5Instance.pop();
+
+		// draw summary
+		p5Instance.push();
+		p5Instance.fill(193, 225, 195);
+		p5Instance.noStroke();
+		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight, this.cornerRadius);
+		p5Instance.fill(0);
+		p5Instance.textAlign(p5Instance.LEFT, p5Instance.TOP);
+		p5Instance.textSize(this.helpTextSize*.8);
+		p5Instance.textLeading(this.helpTextSize);
+		let summaryText = `Summary\n\nHands viewed: ${this.handsViewed}\nCorrect: ${this.correctGuesses}\nIncorrect: ${this.incorrectGuesses}\nAccuracy: ${(this.correctGuesses*100/(this.correctGuesses+this.incorrectGuesses)).toFixed(2)}\nCorrect HPM: ${(this.correctGuesses*60/this.totalTime).toFixed(2)}`;
+		p5Instance.text(summaryText, this.helpTextLeftX, this.helpTextTopY, this.helpTextWidth);
+		p5Instance.pop();
+
+		this.menuButton.draw(p5Instance);
+	}
+
 	handleMouseClick(p5Instance) {
 		let mouseX = p5Instance.mouseX;
 		let mouseY = p5Instance.mouseY;
@@ -201,15 +246,21 @@ class TimeTrialGame {
 			this.numPlayersDecButton.click(mouseX, mouseY);
 			this.numPlayersIncButton.click(mouseX, mouseY);
 			this.settingsStartButton.click(mouseX, mouseY);
-			return;
-		}
-		let isCorrectGuess = this.holdemHand.handleMouseClick(p5Instance);
-		if (isCorrectGuess === undefined) return;
-		if (isCorrectGuess) {
-			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
-			this.correctGuesses++;
+			return GameHandler.GameState.TIME_TRIAL;
+		} else if (this.gameState === TimeTrialGame.#GameState.PLAY) {
+			let isCorrectGuess = this.holdemHand.handleMouseClick(p5Instance);
+			if (isCorrectGuess === undefined) return GameHandler.GameState.TIME_TRIAL;
+			if (isCorrectGuess) {
+				this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+				this.handsViewed++;
+				this.correctGuesses++;
+				this.lastHandRevealTime = Date.now();
+			} else {
+				this.incorrectGuesses++;
+			}
+			return GameHandler.GameState.TIME_TRIAL;
 		} else {
-			this.incorrectGuesses++;
+			return this.menuButton.isClicked(mouseX, mouseY) ? GameHandler.GameState.MENU : GameHandler.GameState.TIME_TRIAL;
 		}
 	}
 }
