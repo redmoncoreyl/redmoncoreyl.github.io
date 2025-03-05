@@ -7,8 +7,18 @@ class TimeTrialGame {
 		return this.#CONSTANTS.WIDE_SCREEN_HEIGHT_MULTIPLE;
 	}
 
+	static #GameState = Object.freeze({
+		SETTINGS: Symbol('menu'),
+		PLAY: Symbol('arcade'),
+		SUMMARY: Symbol('time-trial')
+	});
+
+	static get GameState() {
+		return TimeTrialGame.#GameState;
+	}
+
 	constructor(screenWidth, screenHeight) {
-		this.isSettings = true;
+		this.gameState = TimeTrialGame.#GameState.SETTINGS;
 
 		// settings title
 		this.settingsTitleText = 'TEXAS HOLD \'EM WINNERS';
@@ -52,7 +62,7 @@ class TimeTrialGame {
 
 		this.settingsStartButton.registerCallback(() => {
 			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
-			this.isSettings = false;
+			this.gameState = TimeTrialGame.#GameState.PLAY;
 			this.startTime = Date.now();
 		});
 	}
@@ -116,14 +126,15 @@ class TimeTrialGame {
 		this.numPlayersRectY = numPlayersDecButtonY;
 		this.numPlayersRectHeight = this.buttonHeight;
 
-		if (!this.isSettings) {
+		if (this.gameState === TimeTrialGame.#GameState.PLAY) {
 			this.holdemHand.resize(screenWidth, screenHeight);
 		}
 	}
 
 	draw(p5Instance) {
-		if (this.isSettings) this.drawSettings(p5Instance);
-		else {
+		if (this.gameState === TimeTrialGame.#GameState.SETTINGS) {
+			this.drawSettings(p5Instance);
+		} else {
 			this.holdemHand.draw(p5Instance);
 			if (Date.now() - this.startTime > (this.totalTime-5)*1000) {
 				let millis = (Date.now() - this.startTime - 500) % 1000;
@@ -184,7 +195,7 @@ class TimeTrialGame {
 	handleMouseClick(p5Instance) {
 		let mouseX = p5Instance.mouseX;
 		let mouseY = p5Instance.mouseY;
-		if (this.isSettings) {
+		if (this.gameState === TimeTrialGame.#GameState.SETTINGS) {
 			this.totalTimeDecButton.click(mouseX, mouseY);
 			this.totalTimeIncButton.click(mouseX, mouseY);
 			this.numPlayersDecButton.click(mouseX, mouseY);
