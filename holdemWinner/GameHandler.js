@@ -63,4 +63,10 @@ class GameHandler {
 			this.gameState = this.game.handleMouseClick(p5Instance);
 		}
 	}
+
+	keyPressed(event) {
+		if (this.gameState !== GameHandler.#GameState.MENU && this.gameState !== GameHandler.#GameState.HELP) {
+			this.game.keyPressed(event);
+		}
+	}
 }

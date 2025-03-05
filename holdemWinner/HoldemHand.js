@@ -233,6 +233,25 @@ class HoldemHand {
 		}
 	}
 
+	keyPressed(event) {
+		let keyNumValues = /[0-9]/;
+		if (keyNumValues.test(event.key)) {
+			let index = Number.parseInt(event.key);
+			index = (index+9)%10;
+			if (index >= this.numPlayers) return;
+			this.selectedPlayers[index] = !this.selectedPlayers[index];
+		} else if (event.code === 'Enter') {
+			let isCorrect = this.isPlayerWinning.every((value, i) => value === this.selectedPlayers[i]);
+			if (isCorrect) {
+				CORRECT_SOUND_EFFECT.play();
+				return true;
+			} else {
+				INCORRECT_SOUND_EFFECT.play();
+				return false;
+			}
+		}
+	}
+
 	generateCommunityCardLocations(screenWidth, screenHeight) {
 		// spacing
 		let [cardWidth, cardHeight] = HoldemHand.#cardDimensions(screenWidth, screenHeight);

@@ -29,9 +29,15 @@ function preload() {
 }
 
 function keyPressed(event) {
-	if (event.key === 'Escape') {
+	if (event.code === 'Escape') {
 		game = new GameHandler(width, height);
+		return;
 	}
+	if (event.code === 'Space') {
+		game.handleMouseClick(this);
+		return;
+	}
+	game.keyPressed(event);
 }
 
 function mousePressed(event) {
