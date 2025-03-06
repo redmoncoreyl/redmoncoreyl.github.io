@@ -27,8 +27,8 @@ function preload() {
 	soundFormats('mp3');
 	CORRECT_SOUND_EFFECT = loadSound('assets/correct.mp3');
 	INCORRECT_SOUND_EFFECT = loadSound('assets/incorrect.mp3');
-	CORRECT_SOUND_EFFECT.setVolume(0.9);
-	INCORRECT_SOUND_EFFECT.setVolume(2.5);
+	CORRECT_SOUND_EFFECT.setVolume(0.7);
+	INCORRECT_SOUND_EFFECT.setVolume(3);
 }
 
 function activateAudioContext() {
