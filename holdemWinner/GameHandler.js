@@ -56,6 +56,8 @@ class GameHandler {
 			this.gameState = this.menu.handleMouseClick(mouseX, mouseY);
 			if (this.gameState === GameHandler.#GameState.TIME_TRIAL) {
 				this.game = new TimeTrialGame(screenWidth, screenHeight);
+			} else if (this.gameState === GameHandler.#GameState.ARCADE) {
+				this.game = new ArcadeGame(screenWidth, screenHeight);
 			}
 		}  else if (this.gameState === GameHandler.#GameState.HELP) {
 			this.gameState = this.helpScreen.handleMouseClick(mouseX, mouseY);
