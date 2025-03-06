@@ -151,8 +151,8 @@ class ArcadeGame {
 				let millis = (this.lastHandRevealTime + this.currentTimePerHand*1000 - Date.now() - 500) % 1000;
 				let angle = millis/1000*2*Math.PI;
 				let cos = (Math.cos(angle) + 1)/2;
-				let alpha = cos*120;
-				p5Instance.background(242, 52, 39, alpha);
+				let alpha = cos*80;
+				p5Instance.background(0, 90, 190, alpha);
 			}
 
 			if (Date.now() - this.lastHandRevealTime > this.currentTimePerHand*1000) {
