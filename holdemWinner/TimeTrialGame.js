@@ -10,7 +10,7 @@ class TimeTrialGame {
 	static #GameState = Object.freeze({
 		SETTINGS: Symbol('menu'),
 		PLAY: Symbol('arcade'),
-		SUMMARY: Symbol('time-trial')
+		SUMMARY: Symbol('summary')
 	});
 
 	static get GameState() {
@@ -62,6 +62,7 @@ class TimeTrialGame {
 		this.correctGuesses = 0;
 		this.incorrectGuesses = 0;
 		this.handsViewed = 1;
+		this.lastGuessTime = null;
 
 		this.settingsStartButton.registerCallback(() => {
 			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
@@ -144,7 +145,7 @@ class TimeTrialGame {
 		} else if (this.gameState === TimeTrialGame.#GameState.PLAY) {
 			this.holdemHand.draw(p5Instance);
 			if (Date.now() - this.startTime > (this.totalTime-5)*1000) {
-				let millis = (Date.now() - this.startTime - 500) % 1000;
+				let millis = (this.startTime + this.totalTime*1000 - Date.now() - 500) % 1000;
 				let angle = millis/1000*2*Math.PI;
 				let cos = (Math.cos(angle) + 1)/2;
 				let alpha = cos*120;
@@ -153,8 +154,11 @@ class TimeTrialGame {
 
 			if (Date.now() - this.startTime > this.totalTime*1000) {
 				this.gameState = TimeTrialGame.#GameState.SUMMARY;
-				if (Date.now() - this.lastHandRevealTime < 1000) {
+				if (Date.now() - this.lastHandRevealTime < 2000) {
 					this.handsViewed--;
+				}
+				if (Date.now() - this.lastGuessTime > 2000) {
+					this.incorrectGuesses++;
 				}
 			}
 		} else {
@@ -230,7 +234,7 @@ class TimeTrialGame {
 		p5Instance.textAlign(p5Instance.LEFT, p5Instance.TOP);
 		p5Instance.textSize(this.helpTextSize*.8);
 		p5Instance.textLeading(this.helpTextSize);
-		let summaryText = `Summary\n\nHands viewed: ${this.handsViewed}\nCorrect: ${this.correctGuesses}\nIncorrect: ${this.incorrectGuesses}\nAccuracy: ${(this.correctGuesses*100/(this.handsViewed)).toFixed(2)}\nCorrect HPM: ${(this.correctGuesses*60/this.totalTime).toFixed(2)}`;
+		let summaryText = `Summary\n\nTotal time: ${this.totalTime}\nHands viewed: ${this.handsViewed}\nCorrect: ${this.correctGuesses}\nIncorrect: ${this.incorrectGuesses}\nAccuracy: ${(this.correctGuesses*100/(this.correctGuesses + this.incorrectGuesses)).toFixed(2)}%\nCorrect HPM: ${(this.correctGuesses*60/this.totalTime).toFixed(2)}`;
 		p5Instance.text(summaryText, this.helpTextLeftX, this.helpTextTopY, this.helpTextWidth);
 		p5Instance.pop();
 
@@ -251,13 +255,14 @@ class TimeTrialGame {
 			let isCorrectGuess = this.holdemHand.handleMouseClick(p5Instance);
 			if (isCorrectGuess === undefined) return GameHandler.GameState.TIME_TRIAL;
 			if (isCorrectGuess) {
-				this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
-				this.handsViewed++;
 				this.correctGuesses++;
-				this.lastHandRevealTime = Date.now();
 			} else {
 				this.incorrectGuesses++;
 			}
+			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+			this.handsViewed++;
+			this.lastHandRevealTime = Date.now();
+			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.TIME_TRIAL;
 		} else {
 			return this.menuButton.isClicked(mouseX, mouseY) ? GameHandler.GameState.MENU : GameHandler.GameState.TIME_TRIAL;
@@ -269,13 +274,14 @@ class TimeTrialGame {
 			let isCorrectGuess = this.holdemHand.keyPressed(event);
 			if (isCorrectGuess === undefined) return GameHandler.GameState.TIME_TRIAL;
 			if (isCorrectGuess) {
-				this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
-				this.handsViewed++;
 				this.correctGuesses++;
-				this.lastHandRevealTime = Date.now();
 			} else {
 				this.incorrectGuesses++;
 			}
+			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+			this.handsViewed++;
+			this.lastHandRevealTime = Date.now();
+			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.TIME_TRIAL;
 		}
 	}
