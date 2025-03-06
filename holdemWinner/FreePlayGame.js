@@ -190,7 +190,7 @@ class FreePlayGame {
 
 	keyPressed(event) {
 		if (this.gameState === FreePlayGame.GameState.PLAY) {
-			let isCorrectGuess = this.holdemHand.handleMouseClick(p5Instance);
+			let isCorrectGuess = this.holdemHand.keyPressed(event);
 			if (isCorrectGuess === undefined) return GameHandler.GameState.FREE_PLAY;
 			if (isCorrectGuess) {
 				this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
