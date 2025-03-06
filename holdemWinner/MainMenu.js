@@ -54,7 +54,7 @@ class MainMenu {
 
 	draw(p5Instance) {
 		p5Instance.push();
-		
+
 		// draw title
 		p5Instance.textSize(this.titleSize);
 		p5Instance.noStroke();

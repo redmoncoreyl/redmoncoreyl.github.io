@@ -12,19 +12,6 @@ class GameHandler {
 	}
 
 	constructor(screenWidth, screenHeight) {
-		// types of games:
-		// arcade - each round, you have less and less time to get it
-		//   right, goal is to get through as many rounds as possible
-		//     - starting time (20)
-		//     - number of players (6)
-		// time trial - get through as many rounds as possible in a pre-set total amount of time
-		//     - total time (2 minutes)
-		//     - number of players (6)
-		// free play - no time limits
-		//     - number of players (6)
-		// help
-
-		// escape should pause game
 		this.gameState = GameHandler.#GameState.MENU;
 		this.menu = new MainMenu(screenWidth, screenHeight);
 		this.helpScreen = new HelpScreen(screenWidth, screenHeight);
@@ -58,6 +45,8 @@ class GameHandler {
 				this.game = new TimeTrialGame(screenWidth, screenHeight);
 			} else if (this.gameState === GameHandler.#GameState.ARCADE) {
 				this.game = new ArcadeGame(screenWidth, screenHeight);
+			} else if (this.gameState === GameHandler.#GameState.FREE_PLAY) {
+				this.game = new FreePlayGame(screenWidth, screenHeight);
 			}
 		}  else if (this.gameState === GameHandler.#GameState.HELP) {
 			this.gameState = this.helpScreen.handleMouseClick(mouseX, mouseY);
