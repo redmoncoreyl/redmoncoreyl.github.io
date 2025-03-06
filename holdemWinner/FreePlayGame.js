@@ -107,6 +107,22 @@ class FreePlayGame {
 			this.drawSettings(p5Instance);
 		} else {
 			this.holdemHand.draw(p5Instance);
+
+			if (this.guessOverlayColor !== null) {
+				let millis = Date.now() - this.lastGuessTime;
+				if (millis > 300) {
+					this.guessOverlayColor = null;
+					return;
+				}
+				let angle = millis/300*Math.PI;
+				let cos = (Math.cos(angle) + 1)/2;
+				let alpha = cos*130;
+				if (this.guessOverlayColor === 'red') {
+					p5Instance.background(252, 74, 50, alpha);
+				} else {
+					p5Instance.background(33, 255, 89, alpha);
+				}
+			}
 		}
 	}
 
@@ -164,6 +180,9 @@ class FreePlayGame {
 			if (isCorrectGuess === undefined) return GameHandler.GameState.FREE_PLAY;
 			if (isCorrectGuess) {
 				this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+				this.guessOverlayColor = 'green';
+			} else {
+				this.guessOverlayColor = 'red';
 			}
 			return GameHandler.GameState.FREE_PLAY;
 		}
@@ -175,6 +194,9 @@ class FreePlayGame {
 			if (isCorrectGuess === undefined) return GameHandler.GameState.FREE_PLAY;
 			if (isCorrectGuess) {
 				this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+				this.guessOverlayColor = 'green';
+			} else {
+				this.guessOverlayColor = 'red';
 			}
 			return GameHandler.GameState.FREE_PLAY;
 		}

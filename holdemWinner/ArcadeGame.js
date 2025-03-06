@@ -27,6 +27,7 @@ class ArcadeGame {
 		this.buttonColor = (new p5(() => {})).color(6, 50, 15);
 		this.buttonHoverColor = (new p5(() => {})).color(2, 20, 4);
 		this.buttonTextColor = (new p5(() => {})).color(235);
+		this.guessOverlayColor = null;
 		this.settingsStartButton = new Button('Start', 0, 0, 0, 0,  0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.startingTimeDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.startingTimeIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
@@ -165,6 +166,22 @@ class ArcadeGame {
 					this.incorrectGuesses++;
 				}
 			}
+
+			if (this.guessOverlayColor !== null) {
+				let millis = Date.now() - this.lastGuessTime;
+				if (millis > 300) {
+					this.guessOverlayColor = null;
+					return;
+				}
+				let angle = millis/300*Math.PI;
+				let cos = (Math.cos(angle) + 1)/2;
+				let alpha = cos*130;
+				if (this.guessOverlayColor === 'red') {
+					p5Instance.background(252, 74, 50, alpha);
+				} else {
+					p5Instance.background(33, 255, 89, alpha);
+				}
+			}
 		} else {
 			this.drawSummary(p5Instance);
 		}
@@ -264,8 +281,10 @@ class ArcadeGame {
 				this.correctGuesses++;
 				this.lastHandRevealTime = Date.now();
 				this.currentTimePerHand -= 0.4;
+				this.guessOverlayColor = 'green';
 			} else {
 				this.incorrectGuesses++;
+				this.guessOverlayColor = 'red';
 			}
 			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.ARCADE;
@@ -284,8 +303,10 @@ class ArcadeGame {
 				this.correctGuesses++;
 				this.lastHandRevealTime = Date.now();
 				this.currentTimePerHand -= 0.4;
+				this.guessOverlayColor = 'red';
 			} else {
 				this.incorrectGuesses++;
+				this.guessOverlayColor = 'green';
 			}
 			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.ARCADE;
