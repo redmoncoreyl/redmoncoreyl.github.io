@@ -8,8 +8,8 @@ class ArcadeGame {
 	}
 
 	static #GameState = Object.freeze({
-		SETTINGS: Symbol('menu'),
-		PLAY: Symbol('arcade'),
+		SETTINGS: Symbol('settings'),
+		PLAY: Symbol('play'),
 		SUMMARY: Symbol('summary')
 	});
 
