@@ -12,8 +12,8 @@ class HelpScreen {
 		this.titleText = 'TEXAS HOLD \'EM WINNERS';
 
 		// help text
-		this.goalText = 'The goal is to determine the best 5-card poker hand as fast as possible and without error among all the players hole cards.\n\nTime Trial - identify as many winning hands as possible in the allotted time.\n\nArcade - identify the winning hands before you run out of time to continue playing. You have less time with each successive hand.\n\nFree Play - identify the winning hands at your own pace.';
-		this.controlsText = 'To select the best hand, click or tap on the hole cards, hover over the hole cards and press the space bar, or press the number of the hole cards (1 starts in the top left and numbers continue clockwise).\n\nTo submit your guess, click or tap on the community cards, or press enter.\n\nTo quit, click or tap and hold on the community cards for 5 seconds, or press escape.';
+		this.goalText = 'The goal is to determine the best 5-card poker hand as fast as possible and without error among all the players\' hole cards.\n\nTime Trial - identify as many winning hands as possible in the allotted time.\n\nArcade - identify the winning hands before you run out of time to continue playing. You get less time with each successive hand.\n\nFree Play - identify the winning hands at your own pace.';
+		this.controlsText = 'To select the best hand, click or tap on the hole cards, hover over the hole cards and press the space bar, or press the number of the hole cards (1 starts in the top left and numbers continue clockwise).\n\nTo submit your guess, click or tap on the community cards, or press enter.\n\nTo quit, click or tap and hold for 5 seconds, or press escape.';
 
 		this.helpText = this.goalText;
 		this.isGoalText = true;
