@@ -85,9 +85,9 @@ class FreePlayGame {
 		this.helpTextRectWidth = this.helpTextWidth + 2*this.helpTextRectPadding;
 
 		// num players
-		let settingsTextHeight = 1*this.helpTextSize;
+		let settingsTextHeight = 3*this.helpTextSize;
 		let numPlayersDecButtonX = this.helpTextLeftX;
-		let numPlayersDecButtonY = this.helpTextTopY + this.buttonHeight + settingsTextHeight + 2*this.verticalPadding;
+		let numPlayersDecButtonY = this.helpTextTopY + settingsTextHeight + this.verticalPadding;
 		let numPlayersDecButtonWidth = this.buttonHeight;
 		let numPlayersIncButtonX = this.helpTextLeftX + this.helpTextWidth - numPlayersDecButtonWidth;
 		this.numPlayersDecButton.resize(numPlayersDecButtonX, numPlayersDecButtonY, numPlayersDecButtonWidth, this.buttonHeight, this.cornerRadius, 0);
