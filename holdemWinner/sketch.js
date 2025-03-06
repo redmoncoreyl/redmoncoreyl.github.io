@@ -9,7 +9,7 @@ let CARD_FONT;
 let CORRECT_SOUND_EFFECT;
 let INCORRECT_SOUND_EFFECT;
 let game;
-let touchStartTime = null;
+let touchStart = null;
 
 function preload() {
 	let suitImages = {};
@@ -41,22 +41,22 @@ function keyPressed(event) {
 }
 
 function mousePressed(event) {
-	touchStartTime = Date.now();
+	touchStart = {x: mouseX, y: mouseY, time: Date.now()};
 	game.handleMouseClick(this);
 }
 
 function touchStarted(event) {
-	touchStartTime = Date.now();
+	touchStart = {x: mouseX, y: mouseY, time: Date.now()};
 	event.preventDefault();
 	game.handleMouseClick(this);
 }
 
 function mouseReleased(event) {
-	touchStartTime = null;
+	touchStart = null;
 }
 
 function touchEnded(event) {
-	touchStartTime = null;
+	touchStart = null;
 	event.preventDefault();
 	mouseX = -1;
 	mouseY = -1;
@@ -71,7 +71,7 @@ function draw() {
 	background(3, 110, 43);
 	game.draw(this);
 
-	if (touchStartTime && Date.now() - touchStartTime > 5000) {
+	if (touchStart && touchStart.y - mouseY > height*.7 && Date.now() - touchStart.time < 600) {
 		game = new GameHandler(width, height);
 	}
 }
