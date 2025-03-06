@@ -5,6 +5,9 @@ window.onresize = () => {
 
 document.addEventListener('contextmenu', event => event.preventDefault());
 
+document.addEventListener('click', activateAudioContext);
+document.addEventListener('touchstart', activateAudioContext);
+
 let CARD_FONT;
 let CORRECT_SOUND_EFFECT;
 let INCORRECT_SOUND_EFFECT;
@@ -26,6 +29,12 @@ function preload() {
 	INCORRECT_SOUND_EFFECT = loadSound('assets/incorrect.mp3');
 	CORRECT_SOUND_EFFECT.setVolume(0.9);
 	INCORRECT_SOUND_EFFECT.setVolume(2.5);
+}
+
+function activateAudioContext() {
+    if (getAudioContext().state !== 'running') {
+        getAudioContext().resume();
+    }
 }
 
 function keyPressed(event) {
