@@ -26,6 +26,7 @@ class FreePlayGame {
 		this.buttonColor = (new p5(() => {})).color(6, 50, 15);
 		this.buttonHoverColor = (new p5(() => {})).color(2, 20, 4);
 		this.buttonTextColor = (new p5(() => {})).color(235);
+		this.guessOverlayColor = null;
 		this.settingsStartButton = new Button('Start', 0, 0, 0, 0,  0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
@@ -44,6 +45,7 @@ class FreePlayGame {
 		});
 
 		this.holdemHand = null;
+		this.lastGuessTime = null;
 
 		this.settingsStartButton.registerCallback(() => {
 			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
@@ -184,6 +186,7 @@ class FreePlayGame {
 			} else {
 				this.guessOverlayColor = 'red';
 			}
+			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.FREE_PLAY;
 		}
 	}
@@ -198,6 +201,7 @@ class FreePlayGame {
 			} else {
 				this.guessOverlayColor = 'red';
 			}
+			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.FREE_PLAY;
 		}
 	}
