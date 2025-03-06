@@ -52,10 +52,16 @@ function touchStarted(event) {
 }
 
 function mouseReleased(event) {
+	if (touchStart && touchStart.y - mouseY > height*.45 && Date.now() - touchStart.time < 400) {
+		game = new GameHandler(width, height);
+	}
 	touchStart = null;
 }
 
 function touchEnded(event) {
+	if (touchStart && touchStart.y - mouseY > height*.45 && Date.now() - touchStart.time < 400) {
+		game = new GameHandler(width, height);
+	}
 	touchStart = null;
 	event.preventDefault();
 	mouseX = -1;
@@ -70,8 +76,4 @@ function setup() {
 function draw() {
 	background(3, 110, 43);
 	game.draw(this);
-
-	if (touchStart && touchStart.y - mouseY > height*.7 && Date.now() - touchStart.time < 600) {
-		game = new GameHandler(width, height);
-	}
 }
