@@ -36,7 +36,7 @@ class TimeTrialGame {
 
 		this.totalTime = 120;
 		this.numPlayers = 6;
-		
+
 		this.resize(screenWidth, screenHeight);
 
 		this.totalTimeDecButton.registerCallback(() => {
@@ -132,7 +132,7 @@ class TimeTrialGame {
 		this.numPlayersRectHeight = this.buttonHeight;
 
 		// summary
-		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0)
+		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0);
 
 		if (this.gameState === TimeTrialGame.#GameState.PLAY) {
 			this.holdemHand.resize(screenWidth, screenHeight);

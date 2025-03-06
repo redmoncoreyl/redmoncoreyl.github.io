@@ -37,7 +37,7 @@ class ArcadeGame {
 		this.startingTimePerHand = 20;
 		this.currentTimePerHand = 20;
 		this.numPlayers = 6;
-		
+
 		this.resize(screenWidth, screenHeight);
 
 		this.startingTimeDecButton.registerCallback(() => {
@@ -135,7 +135,7 @@ class ArcadeGame {
 		this.numPlayersRectHeight = this.buttonHeight;
 
 		// summary
-		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0)
+		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0);
 
 		if (this.gameState === ArcadeGame.#GameState.PLAY) {
 			this.holdemHand.resize(screenWidth, screenHeight);

@@ -148,7 +148,7 @@ class HoldemHand {
 		}
 		this.isPlayerWinning = HoldemHand.#determineWinners(this.communityCards, this.holeCards);
 		this.selectedPlayers = Array(numPlayers).fill(false);
-		
+
 		this.resize(screenWidth, screenHeight);
 	}
 
@@ -258,7 +258,7 @@ class HoldemHand {
 		let wideScreenSpacing = cardWidth * (1 + HoldemHand.NARROW_SPACING_CARD_WIDTH_MULTIPLE);
 		let narrowScreenSpacing = cardWidth * HoldemHand.FANNED_CARD_WIDTH_MULTIPLE;
 		let spacing = HoldemHand.#isWideScreen(screenWidth, screenHeight) ? wideScreenSpacing : narrowScreenSpacing;
-		
+
 		// draw community cards
 		let cardX = screenWidth/2 - 2*(spacing);
 		let cardY = screenHeight/2;
