@@ -33,6 +33,7 @@ class ArcadeGame {
 		this.startingTimeIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
+		this.playAgainButton = new Button('Play Again', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.menuButton = new Button('Menu', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 
 		this.startingTimePerHand = 20;
@@ -73,6 +74,16 @@ class ArcadeGame {
 			this.gameState = ArcadeGame.#GameState.PLAY;
 			this.startTime = Date.now();
 			this.lastHandRevealTime = Date.now();
+		});
+
+		this.playAgainButton.registerCallback(() => {
+			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+			this.gameState = ArcadeGame.#GameState.PLAY;
+			this.startTime = Date.now();
+			this.lastHandRevealTime = Date.now();
+			this.handsViewed = 1;
+			this.correctGuesses = 0;
+			this.incorrectGuesses = 0;
 		});
 	}
 
@@ -136,6 +147,7 @@ class ArcadeGame {
 		this.numPlayersRectHeight = this.buttonHeight;
 
 		// summary
+		this.playAgainButton.resize(buttonLeftX, buttonTopY - this.buttonHeight - this.verticalPadding, buttonWidth, this.buttonHeight, this.cornerRadius, 0)
 		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0);
 
 		if (this.gameState === ArcadeGame.#GameState.PLAY) {
@@ -250,7 +262,7 @@ class ArcadeGame {
 		p5Instance.push();
 		p5Instance.fill(193, 225, 195);
 		p5Instance.noStroke();
-		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight, this.cornerRadius);
+		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight - this.buttonHeight - this.verticalPadding, this.cornerRadius);
 		p5Instance.fill(0);
 		p5Instance.textAlign(p5Instance.LEFT, p5Instance.TOP);
 		p5Instance.textSize(this.helpTextSize*.8);
@@ -259,6 +271,7 @@ class ArcadeGame {
 		p5Instance.text(summaryText, this.helpTextLeftX, this.helpTextTopY, this.helpTextWidth);
 		p5Instance.pop();
 
+		this.playAgainButton.draw(p5Instance);
 		this.menuButton.draw(p5Instance);
 	}
 
@@ -289,6 +302,10 @@ class ArcadeGame {
 			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.ARCADE;
 		} else {
+			if (this.playAgainButton.isClicked(mouseX, mouseY)) {
+				this.playAgainButton.click(mouseX, mouseY);
+				return GameHandler.GameState.ARCADE;
+			}
 			return this.menuButton.isClicked(mouseX, mouseY) ? GameHandler.GameState.MENU : GameHandler.GameState.ARCADE;
 		}
 	}
@@ -303,10 +320,10 @@ class ArcadeGame {
 				this.correctGuesses++;
 				this.lastHandRevealTime = Date.now();
 				this.currentTimePerHand -= 0.4;
-				this.guessOverlayColor = 'red';
+				this.guessOverlayColor = 'green';
 			} else {
 				this.incorrectGuesses++;
-				this.guessOverlayColor = 'green';
+				this.guessOverlayColor = 'red';
 			}
 			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.ARCADE;

@@ -33,6 +33,7 @@ class TimeTrialGame {
 		this.totalTimeIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersDecButton = new Button('-', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.numPlayersIncButton = new Button('+', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
+		this.playAgainButton = new Button('Play Again', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 		this.menuButton = new Button('Menu', 0, 0, 0, 0, 0, 0, this.buttonColor, this.buttonHoverColor, this.buttonTextColor, null);
 
 		this.totalTime = 120;
@@ -70,6 +71,16 @@ class TimeTrialGame {
 			this.gameState = TimeTrialGame.#GameState.PLAY;
 			this.startTime = Date.now();
 			this.lastHandRevealTime = Date.now();
+		});
+
+		this.playAgainButton.registerCallback(() => {
+			this.holdemHand = new HoldemHand(this.numPlayers, this.screenWidth, this.screenHeight);
+			this.gameState = TimeTrialGame.#GameState.PLAY;
+			this.startTime = Date.now();
+			this.lastHandRevealTime = Date.now();
+			this.handsViewed = 1;
+			this.correctGuesses = 0;
+			this.incorrectGuesses = 0;
 		});
 	}
 
@@ -133,6 +144,7 @@ class TimeTrialGame {
 		this.numPlayersRectHeight = this.buttonHeight;
 
 		// summary
+		this.playAgainButton.resize(buttonLeftX, buttonTopY - this.buttonHeight - this.verticalPadding, buttonWidth, this.buttonHeight, this.cornerRadius, 0)
 		this.menuButton.resize(buttonLeftX, buttonTopY, buttonWidth, this.buttonHeight, this.cornerRadius, 0);
 
 		if (this.gameState === TimeTrialGame.#GameState.PLAY) {
@@ -246,7 +258,7 @@ class TimeTrialGame {
 		p5Instance.push();
 		p5Instance.fill(193, 225, 195);
 		p5Instance.noStroke();
-		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight, this.cornerRadius);
+		p5Instance.rect(this.helpTextRectX, this.helpTextRectY, this.helpTextRectWidth, this.helpTextRectHeight - this.buttonHeight - this.verticalPadding, this.cornerRadius);
 		p5Instance.fill(0);
 		p5Instance.textAlign(p5Instance.LEFT, p5Instance.TOP);
 		p5Instance.textSize(this.helpTextSize*.8);
@@ -255,6 +267,7 @@ class TimeTrialGame {
 		p5Instance.text(summaryText, this.helpTextLeftX, this.helpTextTopY, this.helpTextWidth);
 		p5Instance.pop();
 
+		this.playAgainButton.draw(p5Instance);
 		this.menuButton.draw(p5Instance);
 	}
 
@@ -284,6 +297,10 @@ class TimeTrialGame {
 			this.lastGuessTime = Date.now();
 			return GameHandler.GameState.TIME_TRIAL;
 		} else {
+			if (this.playAgainButton.isClicked(mouseX, mouseY)) {
+				this.playAgainButton.click(mouseX, mouseY);
+				return GameHandler.GameState.TIME_TRIAL;
+			}
 			return this.menuButton.isClicked(mouseX, mouseY) ? GameHandler.GameState.MENU : GameHandler.GameState.TIME_TRIAL;
 		}
 	}
