@@ -1,0 +1,92 @@
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: 'Inter', sans-serif;
+	line-height: 1.6;
+	color: #2d2d2d;
+	background-color: #f5f7fa;
+	padding: 1rem;
+}
+
+header,
+section {
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+}
+
+header {
+	text-align: center;
+	border-bottom: 2px solid #ddd;
+	background-color: #e6f0fa;
+	border-radius: 8px;
+}
+
+header h1 {
+	font-size: 2.25rem;
+	margin-bottom: 0.5rem;
+	color: #204070;
+}
+
+header p {
+	font-size: 1rem;
+	color: #204070;
+}
+
+section h2 {
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
+	color: #183a5a;
+	border-bottom: 1px solid #b0c4de;
+	padding-bottom: 0.25rem;
+}
+
+.job {
+	margin-bottom: 1.5rem;
+}
+
+.job h3 {
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: #1a3d66;
+}
+
+.job small {
+	display: block;
+	font-size: 0.9rem;
+	color: #666;
+	margin-bottom: 0.25rem;
+}
+
+ul {
+	list-style: disc;
+	padding-left: 1.5rem;
+}
+
+.project,
+.education {
+	margin-bottom: 1.25rem;
+}
+
+a {
+	color: #0066cc;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+	header h1 {
+		font-size: 1.75rem;
+	}
+
+	section h2 {
+		font-size: 1.25rem;
+	}
+}
