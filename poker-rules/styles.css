@@ -12,7 +12,7 @@
 }
 
 html {
-  font-size: 16px;
+  font-size: 18px;
 }
 
 body {
@@ -24,7 +24,7 @@ body {
 }
 
 .page {
-  width: min(100% - 2rem, 900px);
+  width: min(100% - 2rem, 800px);
   margin: 0 auto;
   padding: 2rem 0 4rem;
 }
